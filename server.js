@@ -1,0 +1,29 @@
+'use strict';
+
+// Start by registering a hook that makes calls to `require` run ES6 code
+// This will be the only file where JSX and ES6 features are not supported
+require('babel/register');
+
+var React = require('react');
+var server = require('express')();
+
+// Require and wrap the React main component in a factory before calling it
+// This is necessary because we'll do `SpaceHorse()` instead of <SpaceHorse />
+var SpaceHorse = React.createFactory(require('./app.jsx'));
+
+// Render the app and send the markup for faster page loads and SEO
+// On the client, React will preserve the markup and only attach event handlers
+server.get('/', function(req, res) {
+  var markup = React.renderToString(SpaceHorse());
+  res.send('<!DOCTYPE html>' + markup);
+});
+
+// Serve the JavaScript code to the client
+server.get('/app.js', function(req, res) {
+  res.sendFile(process.cwd() + "/app.js");
+});
+
+// Listen for connections
+server.listen(process.env.PORT || 8000, function() {
+  console.log('Server is listening...');
+});
