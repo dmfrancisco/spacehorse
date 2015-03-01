@@ -11,16 +11,17 @@ var server = require('express')();
 // This is necessary because we'll do `SpaceHorse()` instead of <SpaceHorse />
 var SpaceHorse = React.createFactory(require('./app.jsx'));
 
-// Render the app and send the markup for faster page loads and SEO
-// On the client, React will preserve the markup and only attach event handlers
-server.get('/', function(req, res) {
-  var markup = React.renderToString(SpaceHorse());
-  res.send('<!DOCTYPE html>' + markup);
-});
-
 // Serve the JavaScript code to the client
 server.get('/app.js', function(req, res) {
   res.sendFile(process.cwd() + "/app.js");
+});
+
+// Render the app and send the markup for faster page loads and SEO
+// On the client, React will preserve the markup and only attach event handlers
+server.get('/*', function(req, res) {
+  var component = SpaceHorse({ startUrl: req.originalUrl });
+  var markup = React.renderToString(component);
+  res.send('<!DOCTYPE html>' + markup);
 });
 
 // Listen for connections

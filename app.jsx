@@ -2,7 +2,78 @@
 'use strict';
 
 import React from 'react';
+import pathtoRegexp from 'path-to-regexp';
 import initialData from './seeds';
+
+// Generic code for client-side routing (based on: http://git.io/x8Uh)
+// Components that include this mixin should implement the `onRouteChange` method
+var RoutingMixin = {
+  // Replaces tradicional <a> link behavior with pushState to  `onRouteChange`
+  registerRoutingListeners: function() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('click', this._onClick, false);
+      window.addEventListener('popstate', this._onPopState, false);
+    }
+  },
+  // Add a new route to this component, if not existing
+  // If `options.sensitive` is true, route will be case sensitive (default is true)
+  // If `options.strict` is false, trailing slash is optional (default is false)
+  initRoute: function(pattern, options) {
+    this.routes = this.routes || {};
+
+    if (!this.routes[pattern]) {
+      var keys = [];
+      this.routes[pattern] = {
+        regexp: pathtoRegexp(pattern, keys, options),
+        keys: keys
+      };
+    }
+  },
+  // Checks if a given url matches an express-style path string
+  // `params` is populated with the data present in the url
+  matchesRoute: function(pattern, url, params) {
+    this.initRoute(pattern);
+
+    var keys = this.routes[pattern].keys;
+    var regexp = this.routes[pattern].regexp;
+    var m = regexp.exec(url);
+
+    if (!m) return false;
+
+    for (var i = 1, len = m.length; i < len; ++i) {
+      var key = keys[i - 1];
+      var val = m[i];
+      if (val !== undefined || !(hasOwnProperty.call(params, key.name))) {
+        params[key.name] = val;
+      }
+    }
+    return true;
+  },
+  _onClick: function(e) {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
+
+    // Ensure link
+    var el = e.target;
+    while (el && 'A' !== el.nodeName) el = el.parentNode;
+    if (!el || 'A' !== el.nodeName || el.target) return;
+
+    // Ignore if tag has "download" or rel="external" attributes
+    if (el.download || el.rel === 'external') return;
+
+    // Check for mailto: in the href
+    if (el.href && el.href.indexOf('mailto:') > -1) return;
+
+    // Check if `href` has same origin
+    if (el.href.indexOf(`//${window.location.hostname}`) == -1) return;
+
+    e.preventDefault();
+    window.history.pushState(null, null, el.pathname);
+    this.onRouteChange(el.pathname);
+  },
+  _onPopState: function() {
+    this.onRouteChange(window.location.pathname);
+  }
+};
 
 // Card component
 var Card = React.createClass({
@@ -70,6 +141,7 @@ var CardList = React.createClass({
 var Board = React.createClass({
   getDefaultProps: function() {
     return {
+      lists: [],
       topbarHeight: "50px"
     };
   },
@@ -111,15 +183,35 @@ var Board = React.createClass({
   }
 });
 
-// Application component
-var App = React.createClass({
+// Router component
+var Router = React.createClass({
+  mixins: [RoutingMixin],
   getInitialState: function() {
-    return initialData["3551dbaf6a52a"];
+    return {
+      data: initialData,
+      url: this.props.startUrl
+    };
+  },
+  componentDidMount: function() {
+    this.registerRoutingListeners();
+  },
+  onRouteChange: function(path) {
+    this.setState({
+      data: this.state.data,
+      url: path
+    });
   },
   render: function() {
-    return (
-      <Board {...this.state}/>
-    );
+    var url = this.state.url, params = {};
+
+    switch (true) {
+      // Show a specific board
+      case this.matchesRoute('/boards/:boardId', url, params):
+        var board = this.state.data[params.boardId];
+        return <Board {...board}/>;
+      default:
+        return <h1>Page not found</h1>;
+    }
   }
 });
 
@@ -141,8 +233,8 @@ var SpaceHorse = React.createClass({
           <title>SpaceHorse</title>
         </head>
         <body style={this.style()}>
-          <App />
-          <script src="app.js"></script>
+          <Router {...this.props}/>
+          <script src="/app.js"></script>
         </body>
       </html>
     );
@@ -153,7 +245,8 @@ var SpaceHorse = React.createClass({
 // React will preserve the server-rendered markup and only attach event handlers
 if (typeof window !== 'undefined') {
   window.onload = function() {
-    React.render(<SpaceHorse />, document);
+    var currentPath = window.location.pathname;
+    React.render(<SpaceHorse startUrl={currentPath} />, document);
   };
 }
 
