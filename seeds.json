@@ -1,0 +1,36 @@
+{
+  "3551dbaf6a52a": {
+    "name": "Example Board",
+    "lists": [{
+      "key":  "3b88d1cb3884",
+      "name": "First list",
+      "cards": [{
+        "key":  "4176d2c77535",
+        "name": "First card in the first list"
+      }, {
+        "key":  "1af15de5a440",
+        "name": "Second card in the first list"
+      }, {
+        "key":  "4eb49d52d7b4",
+        "name": "Third card in the first list"
+      }, {
+        "key":  "7ead6dd5d126",
+        "name": "Fourth card in the first list"
+      }]
+    }, {
+      "key":  "966d3fb872d1",
+      "name": "Second list",
+      "cards": [{
+        "key":  "95277025e2cf",
+        "name": "First card in the second list"
+      }, {
+        "key":  "d5f5eb2873cd",
+        "name": "Second card in the second list"
+      }]
+    }]
+  },
+  "a25a6fabd1553": {
+    "name": "Another Board",
+    "lists": []
+  }
+}
