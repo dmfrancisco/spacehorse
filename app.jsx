@@ -207,7 +207,7 @@ var Router = React.createClass({
     switch (true) {
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
-        var board = this.state.data[params.boardId];
+        var board = this.state.data.find((el) => el.key == params.boardId);
         return <Board {...board}/>;
       default:
         return <h1>Page not found</h1>;
@@ -234,6 +234,7 @@ var SpaceHorse = React.createClass({
         </head>
         <body style={this.style()}>
           <Router {...this.props}/>
+          <script src="/polyfill.js"></script>
           <script src="/app.js"></script>
         </body>
       </html>

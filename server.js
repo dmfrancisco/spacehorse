@@ -16,6 +16,11 @@ server.get('/app.js', function(req, res) {
   res.sendFile(process.cwd() + "/app.js");
 });
 
+// Serve polyfills to the client
+server.get('/polyfill.js', function(req, res) {
+  res.sendFile(process.cwd() + "/node_modules/babel/browser-polyfill.js");
+});
+
 // Render the app and send the markup for faster page loads and SEO
 // On the client, React will preserve the markup and only attach event handlers
 server.get('/*', function(req, res) {
