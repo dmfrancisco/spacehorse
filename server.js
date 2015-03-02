@@ -9,7 +9,7 @@ var server = require('express')();
 
 // Require and wrap the React main component in a factory before calling it
 // This is necessary because we'll do `SpaceHorse()` instead of <SpaceHorse />
-var SpaceHorse = React.createFactory(require('./app.jsx'));
+var SpaceHorse = React.createFactory(require('./app.jsx').SpaceHorse);
 
 // Serve the JavaScript code to the client
 server.get('/app.js', function(req, res) {

@@ -5,20 +5,27 @@ import React from 'react';
 import pathtoRegexp from 'path-to-regexp';
 import initialData from './seeds';
 
-// Generic code for client-side routing (based on: http://git.io/x8Uh)
-// Components that include this mixin should implement the `onRouteChange` method
-var RoutingMixin = {
-  // Replaces tradicional <a> link behavior with pushState to  `onRouteChange`
+/*
+ * Routing Mixin
+ *
+ * Simple mixin for client-side routing (partially based on: http://git.io/x8Uh)
+ * Components that include this mixin should implement an `onRouteChange` method
+ * that is called after the url changes and receives the current path as param.
+ * The `registerRoutingListeners` method can be called on `componentDidMount`.
+ * The `matchesRoute` method can be used to decide which component to render.
+ */
+export var RoutingMixin = {
+  // Replaces <a> link behavior with pushState and listens to changes in the url
   registerRoutingListeners: function() {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', this._onClick, false);
       window.addEventListener('popstate', this._onPopState, false);
     }
   },
-  // Add a new route to this component, if not existing
+  // Add a new route to this component, if it does not already exists
   // If `options.sensitive` is true, route will be case sensitive (default is true)
   // If `options.strict` is false, trailing slash is optional (default is false)
-  initRoute: function(pattern, options) {
+  initRoute: function(pattern, options = {}) {
     this.routes = this.routes || {};
 
     if (!this.routes[pattern]) {
@@ -30,7 +37,8 @@ var RoutingMixin = {
     }
   },
   // Checks if a given url matches an express-style path string
-  // `params` is populated with the data present in the url
+  // @param {Object} params — this is populated with data extracted from the url
+  // @return {Boolean}
   matchesRoute: function(pattern, url, params) {
     this.initRoute(pattern);
 
@@ -49,6 +57,8 @@ var RoutingMixin = {
     }
     return true;
   },
+  // When a link (that points to somewhere inside the app) is clicked, prevents
+  // default behavior, updates the url with `pushState` and calls `onRouteChange`
   _onClick: function(e) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
 
@@ -70,13 +80,16 @@ var RoutingMixin = {
     window.history.pushState(null, null, el.pathname);
     this.onRouteChange(el.pathname);
   },
+  // If the url has changed somehow, call `onRouteChange`
   _onPopState: function() {
     this.onRouteChange(window.location.pathname);
   }
 };
 
-// Card component
-var Card = React.createClass({
+/*
+ * Card Component
+ */
+export var Card = React.createClass({
   style: function() {
     return {
       background: "white",
@@ -88,13 +101,28 @@ var Card = React.createClass({
   },
   render: function() {
     return (
-      <div style={this.style()}>{this.props.children}</div>
+      <div className="Card" style={this.style()}>
+        {this.props.children}
+      </div>
     );
   }
 });
 
-// CardList component
-var CardList = React.createClass({
+/*
+ * CardList Component
+ *
+ * A simple ordered list of card components
+ */
+export var CardList = React.createClass({
+  propTypes: {
+    cards: React.PropTypes.array,
+    name: React.PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+      cards: []
+    };
+  },
   headerStyle: function() {
     return {
       WebkitColumnBreakBefore: "always",
@@ -125,11 +153,11 @@ var CardList = React.createClass({
       );
     });
     return (
-      <div>
+      <div className="CardList">
         <div style={this.headerStyle()}>
           {this.props.name}
         </div>
-        <ol style={this.listStyle()}>
+        <ol className="CardList-cards" style={this.listStyle()}>
           {cardNodes}
         </ol>
       </div>
@@ -137,8 +165,17 @@ var CardList = React.createClass({
   }
 });
 
-// Board component
-var Board = React.createClass({
+/*
+ * Board Component
+ *
+ * Currently, consists simply of a title and a list of lists of cards
+ */
+export var Board = React.createClass({
+  propTypes: {
+    lists: React.PropTypes.array,
+    name: React.PropTypes.string,
+    topbarHeight: React.PropTypes.string
+  },
   getDefaultProps: function() {
     return {
       lists: [],
@@ -171,11 +208,11 @@ var Board = React.createClass({
       );
     });
     return (
-      <div>
+      <div className="Board">
         <div style={this.headerStyle()}>
           {this.props.name}
         </div>
-        <div style={this.contentStyle()}>
+        <div className="Board-cardLists" style={this.contentStyle()}>
           {listNodes}
         </div>
       </div>
@@ -183,9 +220,19 @@ var Board = React.createClass({
   }
 });
 
-// Router component
-var Router = React.createClass({
+/*
+ * Router Component
+ */
+export var Router = React.createClass({
   mixins: [RoutingMixin],
+  propTypes: {
+    startUrl: React.PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+      startUrl: "/"
+    };
+  },
   getInitialState: function() {
     return {
       data: initialData,
@@ -215,9 +262,12 @@ var Router = React.createClass({
   }
 });
 
-// Main component
-// The <!doctype> tag must be added afterwards since it is not valid JSX
-var SpaceHorse = React.createClass({
+/*
+ * Main component
+ *
+ * The <!doctype> tag must be added afterwards since it is not valid JSX
+ */
+export var SpaceHorse = React.createClass({
   style: function () {
     return {
       background: "gainsboro",
@@ -250,6 +300,3 @@ if (typeof window !== 'undefined') {
     React.render(<SpaceHorse startUrl={currentPath} />, document);
   };
 }
-
-// Export the main React component
-export default SpaceHorse;
