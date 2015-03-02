@@ -1,4 +1,8 @@
-![spacehorse](spacehorse.svg)
+![spacehorse](https://gc.david.tools/spacehorse.svg)
+
+This is a work in progress. It's something I want for myself but also a place to experiment with ES6 features, Isomorphic JavaScript, the [React library and JSX](http://facebook.github.io/react/), the [SUIT CSS naming conventions](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) and some unconventional practices recently proposed by Facebook (like using [inline CSS styles](https://speakerdeck.com/vjeux/react-css-in-js) again).
+
+---
 
 There's a new note-taking app each day. Almost as many as weather apps. Each one more minimalistic than the last. On average, a 30-year-old programmer has built at least four during his professional life, [study shows](https://t.co/hiz5ePHMTi). To each his own, I suppose.
 
@@ -11,8 +15,6 @@ Though I only realized this recently, they take two forms, which result from dis
 
 In the first situation, my goal is to capture something freely and rapidly with a few words and links. It can't require much effort, otherwise I may not feel like doing it.
 The second kind of notes emerge from necessity, or from the urge to learn something deeper. They become longer, with sections and subsections.
-
----
 
 For this to work properly, the interface should reflect these two use cases.
 
@@ -30,3 +32,7 @@ Additionally, I think this tool should meet the following requirements:
 - Probably include some basic authentication or encryption option (like [TiddlyWiki](http://tiddlywiki.com/static/EncryptionMechanism.html) has)
 
 In the absence of a tool with these features, I have been using simultaneously Trello and Private Gists on GitHub (lately, I've been experimenting with TiddlyWiki instead of the later).
+
+---
+
+Additional ideas and mockups available [here](https://gc.david.tools/spacehorse-150b874b689d/mockups/).
