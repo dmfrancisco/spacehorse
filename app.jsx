@@ -90,18 +90,16 @@ export var RoutingMixin = {
  * Card Component
  */
 export var Card = React.createClass({
-  style: function() {
-    return {
-      background: "white",
-      boxSizing: "border-box",
-      minHeight: 60,
-      padding: 10,
-      width: "100%"
-    };
+  style: {
+    background: "white",
+    boxSizing: "border-box",
+    minHeight: 60,
+    padding: 10,
+    width: "100%"
   },
   render: function() {
     return (
-      <div className="Card" style={this.style()}>
+      <div className="Card" style={this.style}>
         {this.props.children}
       </div>
     );
@@ -123,29 +121,25 @@ export var CardList = React.createClass({
       cards: []
     };
   },
-  headerStyle: function() {
-    return {
+  styles: {
+    header: {
       WebkitColumnBreakBefore: "always",
       fontWeight: "bold"
-    };
-  },
-  listStyle: function() {
-    return {
+    },
+    list: {
       listStyle: "none",
       padding: 0
-    };
-  },
-  listItemStyle: function() {
-    return {
+    },
+    listItem: {
       WebkitColumnBreakInside: "avoid",
       display: "block",
       marginBottom: 5
-    };
+    }
   },
   render: function() {
     var cardNodes = this.props.cards.map((card) => {
       return (
-        <li style={this.listItemStyle()} key={card.key}>
+        <li style={this.styles.listItem} key={card.key}>
           <Card>
             {card.name}
           </Card>
@@ -154,10 +148,10 @@ export var CardList = React.createClass({
     });
     return (
       <div className="CardList">
-        <div style={this.headerStyle()}>
+        <div style={this.styles.header}>
           {this.props.name}
         </div>
-        <ol className="CardList-cards" style={this.listStyle()}>
+        <ol className="CardList-cards" style={this.styles.list}>
           {cardNodes}
         </ol>
       </div>
@@ -182,24 +176,27 @@ export var Board = React.createClass({
       topbarHeight: "50px"
     };
   },
-  headerStyle: function() {
-    return {
+  styles: {
+    header: {
       background: "white",
       boxSizing: "border-box",
-      fontWeight: "bold",
-      height: this.props.topbarHeight,
-      lineHeight: this.props.topbarHeight,
       paddingLeft: 20
-    };
-  },
-  contentStyle: function() {
-    return {
+    },
+    name: {
+      fontWeight: "bold",
+    },
+    content: {
       WebkitColumnGap: 20,
       WebkitColumnWidth: 260,
       boxSizing: "border-box",
-      height: `calc(100vh - ${ this.props.topbarHeight })`,
       padding: 20
-    };
+    }
+  },
+  componentWillMount: function() {
+    var topbarHeight = this.props.topbarHeight;
+    this.styles.header.height = topbarHeight;
+    this.styles.name.lineHeight = topbarHeight;
+    this.styles.content.height = `calc(100vh - ${ topbarHeight })`;
   },
   render: function() {
     var listNodes = this.props.lists.map(function(list) {
@@ -209,10 +206,10 @@ export var Board = React.createClass({
     });
     return (
       <div className="Board">
-        <div style={this.headerStyle()}>
-          {this.props.name}
+        <div style={this.styles.header}>
+          <span style={this.styles.name}>{this.props.name}</span>
         </div>
-        <div className="Board-cardLists" style={this.contentStyle()}>
+        <div className="Board-cardLists" style={this.styles.content}>
           {listNodes}
         </div>
       </div>
