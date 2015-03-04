@@ -11,14 +11,14 @@ var TestUtils = React.addons.TestUtils;
 
 // Include polyfills and import the app's transpiled code
 import 'babel/register';
-import * as App from './app.jsx';
+import * as SpaceHorse from './app.jsx';
 
 import assert from 'assert';
 
 
 describe('CardList', function() {
   it('should render an empty list if `cards` prop is not given', function() {
-    var instance = TestUtils.renderIntoDocument(<App.CardList />);
+    var instance = TestUtils.renderIntoDocument(<SpaceHorse.CardList />);
     var list = TestUtils.findRenderedDOMComponentWithClass(instance, "CardList-cards");
     assert.equal(list.getDOMNode().textContent, "");
   });
@@ -26,15 +26,14 @@ describe('CardList', function() {
 
 describe('Board', function() {
   it('should render an empty board if `lists` prop is not given', function() {
-    var instance = TestUtils.renderIntoDocument(<App.Board />);
-    var list = TestUtils.findRenderedDOMComponentWithClass(instance, "Board-cardLists");
-    assert.equal(list.getDOMNode().textContent, "");
+    var instance = TestUtils.renderIntoDocument(<SpaceHorse.Board />);
+    assert.equal(instance.getDOMNode().textContent, "");
   });
 });
 
-describe('Router', function() {
+describe('App', function() {
   it('should render "Page Not Found" if the URL prop is not passed', function() {
-    var instance = TestUtils.renderIntoDocument(<App.Router />);
+    var instance = TestUtils.renderIntoDocument(<SpaceHorse.App />);
     var heading = TestUtils.findRenderedDOMComponentWithTag(instance, "h1");
     assert.equal(heading.getDOMNode().textContent, "Page not found");
   });

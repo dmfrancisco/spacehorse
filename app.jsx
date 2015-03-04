@@ -87,6 +87,23 @@ export var RoutingMixin = {
 };
 
 /*
+ * Styling Mixin
+ *
+ * Simple mixin with utility methods for styling components.
+ */
+export var StylingMixin = {
+  // This is the `m` method from "CSS in JS" (goo.gl/ZRKFcR). It simply merges an
+  // arbitrary number of given objects. Useful for conditionals. Usage example:
+  //    this.mergeStyles(
+  //      styles.example,
+  //      isActive && styles.active
+  //    )
+  mergeStyles: function(...args) {
+    return Object.assign({}, ...args);
+  }
+};
+
+/*
  * Card Component
  */
 export var Card = React.createClass({
@@ -166,37 +183,19 @@ export var CardList = React.createClass({
  */
 export var Board = React.createClass({
   propTypes: {
-    lists: React.PropTypes.array,
-    name: React.PropTypes.string,
-    topbarHeight: React.PropTypes.string
+    lists: React.PropTypes.array
   },
   getDefaultProps: function() {
     return {
-      lists: [],
-      topbarHeight: "50px"
+      lists: []
     };
   },
   styles: {
-    header: {
-      background: "white",
-      boxSizing: "border-box",
-      paddingLeft: 20
-    },
-    name: {
-      fontWeight: "bold",
-    },
-    content: {
-      WebkitColumnGap: 20,
-      WebkitColumnWidth: 260,
-      boxSizing: "border-box",
-      padding: 20
-    }
-  },
-  componentWillMount: function() {
-    var topbarHeight = this.props.topbarHeight;
-    this.styles.header.height = topbarHeight;
-    this.styles.name.lineHeight = topbarHeight;
-    this.styles.content.height = `calc(100vh - ${ topbarHeight })`;
+    WebkitColumnGap: 20,
+    WebkitColumnWidth: 260,
+    boxSizing: "border-box",
+    flex: 1,
+    padding: 20
   },
   render: function() {
     var listNodes = this.props.lists.map(function(list) {
@@ -205,22 +204,126 @@ export var Board = React.createClass({
       );
     });
     return (
-      <div className="Board">
-        <div style={this.styles.header}>
-          <span style={this.styles.name}>{this.props.name}</span>
-        </div>
-        <div className="Board-cardLists" style={this.styles.content}>
-          {listNodes}
-        </div>
+      <div className="Board" style={this.styles}>
+        {listNodes}
       </div>
     );
   }
 });
 
 /*
- * Router Component
+ * Board Chooser Component
  */
-export var Router = React.createClass({
+export var BoardChooser = React.createClass({
+  mixins: [StylingMixin],
+  propTypes: {
+    boards: React.PropTypes.array
+  },
+  getDefaultProps: function() {
+    return {
+      boards: []
+    };
+  },
+  getInitialState: function() {
+    return {
+      active: false
+    };
+  },
+  styles: {
+    container: {
+      display: "inline-block"
+    },
+    dropdown: {
+      background: "white",
+      display: "none",
+      listStyle: "none",
+      margin: 0,
+      padding: 10,
+      position: "absolute"
+    },
+    dropdownActive: {
+      display: "block"
+    }
+  },
+  handleToggleClick: function() {
+    var newState = this.state.active ? false : true;
+    this.setState({ active: newState });
+  },
+  render: function() {
+    var boardNodes = this.props.boards.map(function(board) {
+      var url = `/boards/${board.key}`;
+      return (
+        <li key={board.key}>
+          <a href={url}>{board.name}</a>
+        </li>
+      );
+    });
+    return (
+      <div className="BoardChooser" style={this.styles.container}>
+        <button
+          className="BoardChooser-toggle"
+          onClick={this.handleToggleClick}>
+          Choose Board
+        </button>
+        <ol className="BoardChooser-dropdown"
+          style={this.mergeStyles(
+            this.styles.dropdown,
+            this.state.active && this.styles.dropdownActive
+          )}>
+          {boardNodes}
+        </ol>
+      </div>
+    );
+  }
+});
+
+/*
+ * NavBar Component
+ *
+ * Displays the board name and allows switching between boards
+ */
+export var NavBar = React.createClass({
+  propTypes: {
+    boards: React.PropTypes.array,
+    currentBoard: React.PropTypes.object.isRequired,
+    height: React.PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+      boards: [],
+      height: "50px"
+    };
+  },
+  styles: {
+    container: {
+      background: "white",
+      boxSizing: "border-box",
+      paddingLeft: 20
+    },
+    name: {
+      fontWeight: "bold"
+    }
+  },
+  componentWillMount: function() {
+    this.styles.container.height = this.props.height;
+    this.styles.name.lineHeight = this.props.height;
+  },
+  render: function() {
+    return (
+      <div className="NavBar" style={this.styles.container}>
+        <span style={this.styles.name}>{this.props.currentBoard.name}</span>
+        <BoardChooser boards={this.props.boards}/>
+      </div>
+    );
+  }
+});
+
+/*
+ * App Component
+ *
+ * Decides which components should be rendered by listening to changes in the url
+ */
+export var App = React.createClass({
   mixins: [RoutingMixin],
   propTypes: {
     startUrl: React.PropTypes.string
@@ -235,6 +338,11 @@ export var Router = React.createClass({
       data: initialData,
       url: this.props.startUrl
     };
+  },
+  styles: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh"
   },
   componentDidMount: function() {
     this.registerRoutingListeners();
@@ -252,7 +360,12 @@ export var Router = React.createClass({
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
         var board = this.state.data.find((el) => el.key == params.boardId);
-        return <Board {...board}/>;
+        return (
+          <div style={this.styles}>
+            <NavBar boards={this.state.data} currentBoard={board}/>
+            <Board {...board}/>
+          </div>
+        );
       default:
         return <h1>Page not found</h1>;
     }
@@ -280,7 +393,7 @@ export var SpaceHorse = React.createClass({
           <title>SpaceHorse</title>
         </head>
         <body style={this.style()}>
-          <Router {...this.props}/>
+          <App {...this.props}/>
           <script src="/polyfill.js"></script>
           <script src="/app.js"></script>
         </body>
