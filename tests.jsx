@@ -1,3 +1,5 @@
+/*jshint esnext:true, node:true */
+
 // Import jsdom, a fake DOM implementation, and create fake global objects
 import Jsdom from 'jsdom';
 global.document = Jsdom.jsdom('<html><body></body></html>' || '');
@@ -5,8 +7,7 @@ global.window = document.defaultView;
 global.navigator = { userAgent: 'node.js' };
 
 // Import React and its testing add-ons
-import React from 'react';
-import ReactAddons from 'react/addons';
+import React from 'react/addons';
 var TestUtils = React.addons.TestUtils;
 
 // Include polyfills and import the app's transpiled code

@@ -16,7 +16,7 @@ import initialData from './seeds';
  */
 export var RoutingMixin = {
   // Replaces <a> link behavior with pushState and listens to changes in the url
-  registerRoutingListeners: function() {
+  registerRoutingListeners() {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', this._onClick, false);
       window.addEventListener('popstate', this._onPopState, false);
@@ -25,7 +25,7 @@ export var RoutingMixin = {
   // Add a new route to this component, if it does not already exists
   // If `options.sensitive` is true, route will be case sensitive (default is true)
   // If `options.strict` is false, trailing slash is optional (default is false)
-  initRoute: function(pattern, options = {}) {
+  initRoute(pattern, options = {}) {
     this.routes = this.routes || {};
 
     if (!this.routes[pattern]) {
@@ -39,7 +39,7 @@ export var RoutingMixin = {
   // Checks if a given url matches an express-style path string
   // @param {Object} params — this is populated with data extracted from the url
   // @return {Boolean}
-  matchesRoute: function(pattern, url, params) {
+  matchesRoute(pattern, url, params) {
     this.initRoute(pattern);
 
     var keys = this.routes[pattern].keys;
@@ -59,7 +59,7 @@ export var RoutingMixin = {
   },
   // When a link (that points to somewhere inside the app) is clicked, prevents
   // default behavior, updates the url with `pushState` and calls `onRouteChange`
-  _onClick: function(e) {
+  _onClick(e) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
 
     // Ensure link
@@ -81,7 +81,7 @@ export var RoutingMixin = {
     this.onRouteChange(el.pathname);
   },
   // If the url has changed somehow, call `onRouteChange`
-  _onPopState: function() {
+  _onPopState() {
     this.onRouteChange(window.location.pathname);
   }
 };
@@ -98,7 +98,7 @@ export var StylingMixin = {
   //      styles.example,
   //      isActive && styles.active
   //    )
-  mergeStyles: function(...args) {
+  mergeStyles(...args) {
     return Object.assign({}, ...args);
   }
 };
@@ -114,7 +114,7 @@ export var Card = React.createClass({
     padding: 10,
     width: "100%"
   },
-  render: function() {
+  render() {
     return (
       <div className="Card" style={this.style}>
         {this.props.children}
@@ -133,7 +133,7 @@ export var CardList = React.createClass({
     cards: React.PropTypes.array,
     name: React.PropTypes.string
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       cards: []
     };
@@ -153,10 +153,10 @@ export var CardList = React.createClass({
       marginBottom: 5
     }
   },
-  render: function() {
-    var cardNodes = this.props.cards.map((card) => {
+  render() {
+    var cardNodes = this.props.cards.map((card, index) => {
       return (
-        <li style={this.styles.listItem} key={card.key}>
+        <li style={this.styles.listItem} key={index}>
           <Card>
             {card.name}
           </Card>
@@ -185,7 +185,7 @@ export var Board = React.createClass({
   propTypes: {
     lists: React.PropTypes.array
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       lists: []
     };
@@ -197,7 +197,7 @@ export var Board = React.createClass({
     flex: 1,
     padding: 20
   },
-  render: function() {
+  render() {
     var listNodes = this.props.lists.map(function(list) {
       return (
         <CardList {...list}/>
@@ -219,12 +219,12 @@ export var BoardChooser = React.createClass({
   propTypes: {
     boards: React.PropTypes.array
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       boards: []
     };
   },
-  getInitialState: function() {
+  getInitialState() {
     return {
       active: false
     };
@@ -245,15 +245,15 @@ export var BoardChooser = React.createClass({
       display: "block"
     }
   },
-  handleToggleClick: function() {
+  handleToggleClick() {
     var newState = this.state.active ? false : true;
     this.setState({ active: newState });
   },
-  render: function() {
-    var boardNodes = this.props.boards.map(function(board) {
+  render() {
+    var boardNodes = this.props.boards.map(function(board, index) {
       var url = `/boards/${board.key}`;
       return (
-        <li key={board.key}>
+        <li key={index}>
           <a href={url}>{board.name}</a>
         </li>
       );
@@ -288,7 +288,7 @@ export var NavBar = React.createClass({
     currentBoard: React.PropTypes.object.isRequired,
     height: React.PropTypes.string
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       boards: [],
       height: "50px"
@@ -304,11 +304,11 @@ export var NavBar = React.createClass({
       fontWeight: "bold"
     }
   },
-  componentWillMount: function() {
+  componentWillMount() {
     this.styles.container.height = this.props.height;
     this.styles.name.lineHeight = this.props.height;
   },
-  render: function() {
+  render() {
     return (
       <div className="NavBar" style={this.styles.container}>
         <span style={this.styles.name}>{this.props.currentBoard.name}</span>
@@ -328,12 +328,12 @@ export var App = React.createClass({
   propTypes: {
     startUrl: React.PropTypes.string
   },
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       startUrl: "/"
     };
   },
-  getInitialState: function() {
+  getInitialState() {
     return {
       data: initialData,
       url: this.props.startUrl
@@ -344,16 +344,16 @@ export var App = React.createClass({
     flexDirection: "column",
     height: "100vh"
   },
-  componentDidMount: function() {
+  componentDidMount() {
     this.registerRoutingListeners();
   },
-  onRouteChange: function(path) {
+  onRouteChange(path) {
     this.setState({
       data: this.state.data,
       url: path
     });
   },
-  render: function() {
+  render() {
     var url = this.state.url, params = {};
 
     switch (true) {
@@ -378,21 +378,19 @@ export var App = React.createClass({
  * The <!doctype> tag must be added afterwards since it is not valid JSX
  */
 export var SpaceHorse = React.createClass({
-  style: function () {
-    return {
+  style: {
       background: "gainsboro",
       fontFamily: "sans-serif",
       margin: 0
-    };
   },
-  render: function() {
+  render() {
     return (
       <html>
         <head>
           <meta charSet="utf-8" />
           <title>SpaceHorse</title>
         </head>
-        <body style={this.style()}>
+        <body style={this.style}>
           <App {...this.props}/>
           <script src="/polyfill.js"></script>
           <script src="/app.js"></script>

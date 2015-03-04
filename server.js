@@ -1,3 +1,4 @@
+/*jshint node:true */
 'use strict';
 
 // Start by registering a hook that makes calls to `require` run ES6 code
@@ -24,7 +25,7 @@ server.get('/polyfill.js', function(req, res) {
 // Render the app and send the markup for faster page loads and SEO
 // On the client, React will preserve the markup and only attach event handlers
 server.get('/*', function(req, res) {
-  var component = SpaceHorse({ startUrl: req.originalUrl });
+  var component = new SpaceHorse({ startUrl: req.originalUrl });
   var markup = React.renderToString(component);
   res.send('<!DOCTYPE html>' + markup);
 });
