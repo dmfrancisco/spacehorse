@@ -4,6 +4,7 @@
 import React from 'react';
 import pathtoRegexp from 'path-to-regexp';
 import initialData from './seeds';
+import Icon from './icons.jsx';
 
 /*
  * Routing Mixin
@@ -263,7 +264,7 @@ export var BoardChooser = React.createClass({
         <button
           className="BoardChooser-toggle"
           onClick={this.handleToggleClick}>
-          Choose Board
+          <Icon icon="menu"/>
         </button>
         <ol className="BoardChooser-dropdown"
           style={this.mergeStyles(
@@ -296,9 +297,11 @@ export var NavBar = React.createClass({
   },
   styles: {
     container: {
+      alignItems: "center",
       background: "white",
       boxSizing: "border-box",
-      paddingLeft: 20
+      display: "flex",
+      padding: 20
     },
     name: {
       fontWeight: "bold"
@@ -306,7 +309,6 @@ export var NavBar = React.createClass({
   },
   componentWillMount() {
     this.styles.container.height = this.props.height;
-    this.styles.name.lineHeight = this.props.height;
   },
   render() {
     return (
