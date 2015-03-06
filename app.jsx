@@ -2,8 +2,11 @@
 'use strict';
 
 import React from 'react';
+import Flux from 'flux';
 import pathtoRegexp from 'path-to-regexp';
-import initialData from './seeds';
+import crypto from 'crypto';
+import { EventEmitter } from 'events';
+import data from './seeds';
 import Icon from './icons.jsx';
 
 /*
@@ -105,6 +108,115 @@ export var StylingMixin = {
 };
 
 /*
+ * Random Mixin
+ *
+ * Useful for generating unique identifiers on the client or server.
+ */
+var RandomMixin = {
+  // Generate a random hexadecimal string (from: http://goo.gl/2vuSvL)
+  id: function(len = 12) {
+    return crypto.randomBytes(Math.ceil(len/2))
+      .toString('hex') // Convert to hexadecimal format
+      .slice(0, len);  // Return required number of characters
+  }
+};
+
+/*
+ * Dispatcher
+ *
+ * A singleton that operates as the central hub for application updates.
+ * Can receive actions from both views and server.
+ */
+export var Dispatcher = Object.assign(new Flux.Dispatcher(), {
+  handleServerAction(action) {
+    this.dispatch({
+      source: 'server',
+      action: action
+    });
+  },
+  handleViewAction(action) {
+    this.dispatch({
+      source: 'view',
+      action: action
+    });
+  }
+});
+
+/*
+ * Board Store
+ */
+var BoardStore = Object.assign({}, EventEmitter.prototype, {
+  getBoard(id) {
+    return data.boards.find((el) => el.id == id);
+  },
+  getAll() {
+    return data.boards;
+  }
+});
+
+BoardStore.dispatchToken = Dispatcher.register(function(payload) {
+  // Object with all supported actions by this store
+  var actions = {
+  };
+  // If this action type is one of the supported, invoke it
+  if (actions[payload.action.type]) actions[payload.action.type](payload);
+});
+
+/*
+ * List Store
+ */
+var ListStore = Object.assign({}, EventEmitter.prototype, {
+  getAll(boardId) {
+    return data.lists.filter((el) => el.boardId == boardId);
+  }
+});
+
+ListStore.dispatchToken = Dispatcher.register(function(payload) {
+  // Object with all supported actions by this store
+  var actions = {
+  };
+  // If this action type is one of the supported, invoke it
+  if (actions[payload.action.type]) actions[payload.action.type](payload);
+});
+
+/*
+ * Card Store
+ */
+var CardStore = Object.assign({}, EventEmitter.prototype, {
+  getAll(listId) {
+    return data.cards.filter((el) => el.listId == listId);
+  }
+});
+
+CardStore.dispatchToken = Dispatcher.register(function(payload) {
+  // Object with all supported actions by this store
+  var actions = {
+    createCard(payload) {
+      data.cards.push(payload.action.card);
+      CardStore.emit('change');
+    }
+  };
+  // If this action type is one of the supported, invoke it
+  if (actions[payload.action.type]) actions[payload.action.type](payload);
+});
+
+/*
+ * Card Actions
+ */
+var CardActions = {
+  create: function({ listId, id, name }) {
+    Dispatcher.handleViewAction({
+      type: "createCard",
+      card: {
+        listId: listId,
+        id: RandomMixin.id(),
+        name: name
+      }
+    });
+  }
+};
+
+/*
  * Card Component
  */
 export var Card = React.createClass({
@@ -131,13 +243,17 @@ export var Card = React.createClass({
  */
 export var CardList = React.createClass({
   propTypes: {
-    cards: React.PropTypes.array,
-    name: React.PropTypes.string
+    id: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired
   },
-  getDefaultProps() {
-    return {
-      cards: []
-    };
+  getInitialState() {
+    return this._getStateFromStore();
+  },
+  componentWillMount() {
+    CardStore.addListener("change", this._onStoreChange);
+  },
+  componentWillUnmount() {
+    CardStore.removeListener("change", this._onStoreChange);
   },
   styles: {
     header: {
@@ -154,8 +270,20 @@ export var CardList = React.createClass({
       marginBottom: 5
     }
   },
+  handleSubmit(e) {
+    e.preventDefault();
+
+    var input = this.refs.cardName.getDOMNode();
+    var cardName = input.value.trim();
+    input.value = '';
+
+    CardActions.create({
+      listId: this.props.id,
+      name: cardName
+    });
+  },
   render() {
-    var cardNodes = this.props.cards.map((card, index) => {
+    var cardNodes = this.state.cards.map((card, index) => {
       return (
         <li style={this.styles.listItem} key={index}>
           <Card>
@@ -172,8 +300,19 @@ export var CardList = React.createClass({
         <ol className="CardList-cards" style={this.styles.list}>
           {cardNodes}
         </ol>
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" ref="cardName" />
+        </form>
       </div>
     );
+  },
+  _onStoreChange() {
+    this.setState(this._getStateFromStore());
+  },
+  _getStateFromStore() {
+    return {
+      cards: CardStore.getAll(this.props.id)
+    };
   }
 });
 
@@ -184,12 +323,16 @@ export var CardList = React.createClass({
  */
 export var Board = React.createClass({
   propTypes: {
-    lists: React.PropTypes.array
+    id: React.PropTypes.string.isRequired
   },
-  getDefaultProps() {
-    return {
-      lists: []
-    };
+  getInitialState() {
+    return this._getStateFromStore();
+  },
+  componentWillMount() {
+    ListStore.addListener("change", this._onStoreChange);
+  },
+  componentWillUnmount() {
+    ListStore.removeListener("change", this._onStoreChange);
   },
   styles: {
     WebkitColumnGap: 20,
@@ -199,9 +342,9 @@ export var Board = React.createClass({
     padding: 20
   },
   render() {
-    var listNodes = this.props.lists.map(function(list) {
+    var listNodes = this.state.lists.map(function(list, index) {
       return (
-        <CardList {...list}/>
+        <CardList key={index} id={list.id} name={list.name}/>
       );
     });
     return (
@@ -209,6 +352,14 @@ export var Board = React.createClass({
         {listNodes}
       </div>
     );
+  },
+  _onStoreChange() {
+    this.setState(this._getStateFromStore());
+  },
+  _getStateFromStore() {
+    return {
+      lists: ListStore.getAll(this.props.id)
+    };
   }
 });
 
@@ -252,7 +403,7 @@ export var BoardChooser = React.createClass({
   },
   render() {
     var boardNodes = this.props.boards.map(function(board, index) {
-      var url = `/boards/${board.key}`;
+      var url = `/boards/${board.id}`;
       return (
         <li key={index}>
           <a href={url}>{board.name}</a>
@@ -321,11 +472,57 @@ export var NavBar = React.createClass({
 });
 
 /*
- * App Component
+ * Board Wrapper Component
+ *
+ * Contains the board and a top bar with some board related actions.
+ * Acts as a Controller View from Flux by listening to changes in the store.
+ */
+export var BoardWrapper = React.createClass({
+  propTypes: {
+    currentBoardId: React.PropTypes.string.isRequired,
+  },
+  getInitialState() {
+    return this._getStateFromStore();
+  },
+  componentWillMount() {
+    BoardStore.addListener("change", this._onStoreChange);
+  },
+  componentWillUnmount() {
+    BoardStore.removeListener("change", this._onStoreChange);
+  },
+  styles: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh"
+  },
+  render() {
+    if (!this.state.currentBoard) {
+      return <h2>Board not found</h2>;
+    }
+    return (
+      <div style={this.styles}>
+        <NavBar currentBoard={this.state.currentBoard} boards={this.state.boards}/>
+        <Board id={this.state.currentBoard.id}/>
+      </div>
+    );
+  },
+  _onStoreChange() {
+    this.setState(this._getStateFromStore());
+  },
+  _getStateFromStore() {
+    return {
+      currentBoard: BoardStore.getBoard(this.props.currentBoardId),
+      boards: BoardStore.getAll()
+    };
+  }
+});
+
+/*
+ * Router Component
  *
  * Decides which components should be rendered by listening to changes in the url
  */
-export var App = React.createClass({
+export var Router = React.createClass({
   mixins: [RoutingMixin],
   propTypes: {
     startUrl: React.PropTypes.string
@@ -337,21 +534,14 @@ export var App = React.createClass({
   },
   getInitialState() {
     return {
-      data: initialData,
       url: this.props.startUrl
     };
-  },
-  styles: {
-    display: "flex",
-    flexDirection: "column",
-    height: "100vh"
   },
   componentDidMount() {
     this.registerRoutingListeners();
   },
   onRouteChange(path) {
     this.setState({
-      data: this.state.data,
       url: path
     });
   },
@@ -361,12 +551,8 @@ export var App = React.createClass({
     switch (true) {
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
-        var board = this.state.data.find((el) => el.key == params.boardId);
         return (
-          <div style={this.styles}>
-            <NavBar boards={this.state.data} currentBoard={board}/>
-            <Board {...board}/>
-          </div>
+          <BoardWrapper key={params.boardId} currentBoardId={params.boardId}/>
         );
       default:
         return <h1>Page not found</h1>;
@@ -393,7 +579,7 @@ export var SpaceHorse = React.createClass({
           <title>SpaceHorse</title>
         </head>
         <body style={this.style}>
-          <App {...this.props}/>
+          <Router {...this.props}/>
           <script src="/polyfill.js"></script>
           <script src="/app.js"></script>
         </body>

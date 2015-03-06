@@ -1,6 +1,6 @@
 ![spacehorse](https://gc.david.tools/spacehorse.svg)
 
-This is a work in progress. It's something I want for myself but also a place to experiment with ES6 features, Isomorphic JavaScript, the [React library and JSX](http://facebook.github.io/react/), the [SUIT CSS naming conventions](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) and some unconventional practices recently proposed by Facebook (like using [inline CSS styles](https://speakerdeck.com/vjeux/react-css-in-js) again).
+This is a work in progress. It's something I want for myself but also a place to experiment with ES6 features, Isomorphic JavaScript, the [React library](https://facebook.github.io/react/) and [Flux](https://facebook.github.io/flux/), the [SUIT CSS naming conventions](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) and some unconventional practices recently proposed by Facebook (like using [inline CSS styles](https://speakerdeck.com/vjeux/react-css-in-js) again).
 
 You can install the dependencies with `npm install`. For running the server and tests, checkout the *scripts* section in the *package.json* file (for eg: `npm run watch`). I use [jsxhint](https://github.com/STRML/JSXHint/) to analyze the code.
 
