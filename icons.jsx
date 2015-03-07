@@ -8,14 +8,12 @@ import React from 'react';
  */
 export default React.createClass({
   propTypes: {
-    height: React.PropTypes.string,
     icon: React.PropTypes.string.isRequired,
-    width: React.PropTypes.string
+    size: React.PropTypes.string
   },
   getDefaultProps() {
     return {
-      height: '22px',
-      width: '22px'
+      size: '24px'
     };
   },
   renderGraphic() {
@@ -37,8 +35,8 @@ export default React.createClass({
   render() {
     return (
       <svg viewBox="0 0 24 24"
-        height={this.props.height}
-        width={this.props.width}
+        height={this.props.size}
+        width={this.props.size}
         preserveAspectRatio="xMidYMid meet"
         fit>
         {this.renderGraphic()}

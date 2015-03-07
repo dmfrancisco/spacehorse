@@ -100,10 +100,47 @@ export var StylingMixin = {
   // arbitrary number of given objects. Useful for conditionals. Usage example:
   //    this.mergeStyles(
   //      styles.example,
-  //      isActive && styles.active
+  //      isOpen && styles.open
   //    )
   mergeStyles(...args) {
     return Object.assign({}, ...args);
+  }
+};
+
+/*
+ * Interaction State Styling Mixin
+ *
+ * Simple mixin with utility methods for implementing CSS :active, :hover and
+ * :focus pseudo-classes. Currently only supports :active.
+ */
+export var InteractionStylingMixin = {
+  getInitialState() {
+    return {
+      _interactionStateActive: false
+    };
+  },
+  // Sets up listeners for mouse down and up events. Usage example:
+  //    <button {...this.trackInteractionStateActive()}
+  //      style={this.mergeStyles(
+  //        this.interactionStateIsActive() && this.styles.active
+  //    )}> My Button </button>
+  trackInteractionStateActive() {
+    return {
+      onMouseDown: this._onMouseDown,
+      onMouseUp: this._onMouseUp,
+      onMouseLeave: this._onMouseUp
+    };
+  },
+  // Checks if the interaction state is currently active (the mouse is down).
+  // @return {Boolean}
+  interactionStateIsActive() {
+    return this.state._interactionStateActive === true;
+  },
+  _onMouseDown(e) {
+    this.setState({ _interactionStateActive: true });
+  },
+  _onMouseUp(e) {
+    this.setState({ _interactionStateActive: false });
   }
 };
 
@@ -215,6 +252,52 @@ var CardActions = {
     });
   }
 };
+
+/*
+ * Icon Button Component
+ */
+export var IconButton = React.createClass({
+  mixins: [StylingMixin, InteractionStylingMixin],
+  propTypes: {
+    icon: React.PropTypes.string,
+    onClick: React.PropTypes.func,
+    size: React.PropTypes.string
+  },
+  getDefaultProps() {
+    return {
+      icon: "menu",
+      onClick() {},
+      size: '24px'
+    };
+  },
+  styles: {
+    background: "none",
+    border: "none",
+    borderRadius: "50%",
+    cursor: "pointer",
+    lineHeight: 0,
+    outline: "none",
+    padding: 6,
+    transition: "background 250ms"
+  },
+  activeStyles: {
+    background: "rgba(0,0,0,.1)",
+    transition: "background 100ms"
+  },
+  render() {
+    return (
+      <button
+        {...this.trackInteractionStateActive()}
+        style={this.mergeStyles(
+          this.styles,
+          this.interactionStateIsActive() && this.activeStyles
+        )}
+        onClick={this.props.onClick}>
+        <Icon icon={this.props.icon} size={this.props.size}/>
+      </button>
+    );
+  }
+});
 
 /*
  * Card Component
@@ -378,7 +461,7 @@ export var BoardChooser = React.createClass({
   },
   getInitialState() {
     return {
-      active: false
+      open: false
     };
   },
   styles: {
@@ -393,13 +476,13 @@ export var BoardChooser = React.createClass({
       padding: 10,
       position: "absolute"
     },
-    dropdownActive: {
+    dropdownOpen: {
       display: "block"
     }
   },
   handleToggleClick() {
-    var newState = this.state.active ? false : true;
-    this.setState({ active: newState });
+    var newState = this.state.open ? false : true;
+    this.setState({ open: newState });
   },
   render() {
     var boardNodes = this.props.boards.map(function(board, index) {
@@ -412,15 +495,11 @@ export var BoardChooser = React.createClass({
     });
     return (
       <div className="BoardChooser" style={this.styles.container}>
-        <button
-          className="BoardChooser-toggle"
-          onClick={this.handleToggleClick}>
-          <Icon icon="menu"/>
-        </button>
+        <IconButton icon="menu" onClick={this.handleToggleClick}/>
         <ol className="BoardChooser-dropdown"
           style={this.mergeStyles(
             this.styles.dropdown,
-            this.state.active && this.styles.dropdownActive
+            this.state.open && this.styles.dropdownOpen
           )}>
           {boardNodes}
         </ol>
@@ -443,7 +522,7 @@ export var NavBar = React.createClass({
   getDefaultProps() {
     return {
       boards: [],
-      height: "50px"
+      height: "54px"
     };
   },
   styles: {
@@ -455,7 +534,10 @@ export var NavBar = React.createClass({
       padding: 20
     },
     name: {
-      fontWeight: "bold"
+      display: "block",
+      flex: 1,
+      fontSize: 20,
+      padding: 8
     }
   },
   componentWillMount() {
@@ -464,8 +546,8 @@ export var NavBar = React.createClass({
   render() {
     return (
       <div className="NavBar" style={this.styles.container}>
-        <span style={this.styles.name}>{this.props.currentBoard.name}</span>
         <BoardChooser boards={this.props.boards}/>
+        <span style={this.styles.name}>{this.props.currentBoard.name}</span>
       </div>
     );
   }
