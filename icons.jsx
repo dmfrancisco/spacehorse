@@ -33,10 +33,13 @@ export default React.createClass({
     }
   },
   render() {
+    var style = {
+      // Use CSS instead of the width prop to support non-pixel units (eg: rem)
+      width: this.props.size
+    };
     return (
       <svg viewBox="0 0 24 24"
-        height={this.props.size}
-        width={this.props.size}
+        style={style}
         preserveAspectRatio="xMidYMid meet"
         fit>
         {this.renderGraphic()}

@@ -145,6 +145,18 @@ export var InteractionStylingMixin = {
 };
 
 /*
+ * Convert a list of values in pixels to rems. For example:
+ *    remCalc(16, 18, 32) # returns "1rem 1.125rem 2rem"
+ * @param {Integer} remBase — The base body font size value in pixels
+ * @param {Array} values — One or more values in pixels to be converted to rem
+ * @return {String} Space delimited values that can be used in css styles
+ */
+function remCalc(...values) {
+  var remBase = 16; // The base body font size value in pixels
+  return values.map((value) => `${value/remBase}rem`).join(" ");
+}
+
+/*
  * Random Mixin
  *
  * Useful for generating unique identifiers on the client or server.
@@ -267,7 +279,7 @@ export var IconButton = React.createClass({
     return {
       icon: "menu",
       onClick() {},
-      size: '24px'
+      size: remCalc(24)
     };
   },
   styles: {
@@ -277,7 +289,7 @@ export var IconButton = React.createClass({
     cursor: "pointer",
     lineHeight: 0,
     outline: "none",
-    padding: 6,
+    padding: remCalc(6),
     transition: "background 250ms"
   },
   activeStyles: {
@@ -306,8 +318,8 @@ export var Card = React.createClass({
   style: {
     background: "white",
     boxSizing: "border-box",
-    minHeight: 60,
-    padding: 10,
+    minHeight: remCalc(60),
+    padding: remCalc(10),
     width: "100%"
   },
   render() {
@@ -350,7 +362,7 @@ export var CardList = React.createClass({
     listItem: {
       WebkitColumnBreakInside: "avoid",
       display: "block",
-      marginBottom: 5
+      marginBottom: remCalc(5)
     }
   },
   handleSubmit(e) {
@@ -418,11 +430,11 @@ export var Board = React.createClass({
     ListStore.removeListener("change", this._onStoreChange);
   },
   styles: {
-    WebkitColumnGap: 20,
-    WebkitColumnWidth: 260,
+    WebkitColumnGap: remCalc(20),
+    WebkitColumnWidth: remCalc(260),
     boxSizing: "border-box",
     flex: 1,
-    padding: 20
+    padding: remCalc(20)
   },
   render() {
     var listNodes = this.state.lists.map(function(list, index) {
@@ -473,7 +485,7 @@ export var BoardChooser = React.createClass({
       display: "none",
       listStyle: "none",
       margin: 0,
-      padding: 10,
+      padding: remCalc(10),
       position: "absolute"
     },
     dropdownOpen: {
@@ -522,7 +534,7 @@ export var NavBar = React.createClass({
   getDefaultProps() {
     return {
       boards: [],
-      height: "54px"
+      height: remCalc(54)
     };
   },
   styles: {
@@ -531,13 +543,13 @@ export var NavBar = React.createClass({
       background: "white",
       boxSizing: "border-box",
       display: "flex",
-      padding: 20
+      padding: remCalc(20)
     },
     name: {
       display: "block",
       flex: 1,
-      fontSize: 20,
-      padding: 8
+      fontSize: remCalc(20),
+      padding: remCalc(8)
     }
   },
   componentWillMount() {
