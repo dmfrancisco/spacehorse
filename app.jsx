@@ -1,4 +1,4 @@
-/*jshint esnext:true, browser:true */
+/*jshint esnext:true, browserify:true */
 'use strict';
 
 import React from 'react';
@@ -8,6 +8,12 @@ import crypto from 'crypto';
 import { EventEmitter } from 'events';
 import data from './seeds';
 import Icon from './icons.jsx';
+
+// Detect platforms (from TiddlyWiki's source)
+var Platform = {};
+Platform.node = typeof(process) === "object";
+Platform.nw = Platform.node && global.window && global.window.nwDispatcher;
+Platform.browser = !Platform.nw && typeof(window) !== "undefined";
 
 /*
  * Routing Mixin
@@ -585,6 +591,7 @@ export var BoardWrapper = React.createClass({
     BoardStore.removeListener("change", this._onStoreChange);
   },
   styles: {
+    background: "gainsboro",
     display: "flex",
     flexDirection: "column",
     height: "100vh"
@@ -661,9 +668,8 @@ export var Router = React.createClass({
  */
 export var SpaceHorse = React.createClass({
   style: {
-      background: "gainsboro",
-      fontFamily: "sans-serif",
-      margin: 0
+    fontFamily: "sans-serif",
+    margin: 0
   },
   render() {
     return (
@@ -684,7 +690,7 @@ export var SpaceHorse = React.createClass({
 
 // If we are on the client, render the App component
 // React will preserve the server-rendered markup and only attach event handlers
-if (typeof window !== 'undefined') {
+if (Platform.browser) {
   window.onload = function() {
     var currentPath = window.location.pathname;
     React.render(<SpaceHorse startUrl={currentPath} />, document);
