@@ -1,4 +1,4 @@
-/*jshint esnext:true, browser:true */
+/*jshint esnext:true, browserify:true */
 'use strict';
 
 import React from 'react';
@@ -33,7 +33,7 @@ export default React.createClass({
     }
   },
   render() {
-    var style = {
+    let style = {
       // Use CSS instead of the width prop to support non-pixel units (eg: rem)
       width: this.props.size
     };

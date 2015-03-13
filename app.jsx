@@ -10,7 +10,7 @@ import data from './seeds';
 import Icon from './icons.jsx';
 
 // Detect platforms (from TiddlyWiki's source)
-var Platform = {};
+let Platform = {};
 Platform.node = typeof(process) === "object";
 Platform.nw = Platform.node && global.window && global.window.nwDispatcher;
 Platform.browser = !Platform.nw && typeof(window) !== "undefined";
@@ -39,11 +39,9 @@ export var RoutingMixin = {
     this.routes = this.routes || {};
 
     if (!this.routes[pattern]) {
-      var keys = [];
-      this.routes[pattern] = {
-        regexp: pathtoRegexp(pattern, keys, options),
-        keys: keys
-      };
+      let keys = [];
+      let regexp = pathtoRegexp(pattern, keys, options);
+      this.routes[pattern] = { keys, regexp };
     }
   },
   // Checks if a given url matches an express-style path string
@@ -52,15 +50,15 @@ export var RoutingMixin = {
   matchesRoute(pattern, url, params) {
     this.initRoute(pattern);
 
-    var keys = this.routes[pattern].keys;
-    var regexp = this.routes[pattern].regexp;
-    var m = regexp.exec(url);
+    let keys = this.routes[pattern].keys;
+    let regexp = this.routes[pattern].regexp;
+    let m = regexp.exec(url);
 
     if (!m) return false;
 
-    for (var i = 1, len = m.length; i < len; ++i) {
-      var key = keys[i - 1];
-      var val = m[i];
+    for (let i = 1, len = m.length; i < len; ++i) {
+      let key = keys[i - 1];
+      let val = m[i];
       if (val !== undefined || !(hasOwnProperty.call(params, key.name))) {
         params[key.name] = val;
       }
@@ -73,7 +71,7 @@ export var RoutingMixin = {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
 
     // Ensure link
-    var el = e.target;
+    let el = e.target;
     while (el && 'A' !== el.nodeName) el = el.parentNode;
     if (!el || 'A' !== el.nodeName || el.target) return;
 
@@ -110,6 +108,17 @@ export var StylingMixin = {
   //    )
   mergeStyles(...args) {
     return Object.assign({}, ...args);
+  },
+  /*
+   * Convert a list of values in pixels to rems. For example:
+   *    remCalc(16, 18, 32) # returns "1rem 1.125rem 2rem"
+   * @param {Integer} remBase — The base body font size value in pixels
+   * @param {Array} values — One or more values in pixels to be converted to rem
+   * @return {String} Space delimited values that can be used in css styles
+   */
+  remCalc(...values) {
+    let remBase = 16; // The base body font size value in pixels
+    return values.map((value) => `${value/remBase}rem`).join(" ");
   }
 };
 
@@ -128,7 +137,7 @@ export var InteractionStylingMixin = {
   // Sets up listeners for mouse down and up events. Usage example:
   //    <button {...this.trackInteractionStateActive()}
   //      style={this.mergeStyles(
-  //        this.interactionStateIsActive() && this.styles.active
+  //        this.interactionStateIsActive() && styles.active
   //    )}> My Button </button>
   trackInteractionStateActive() {
     return {
@@ -149,18 +158,6 @@ export var InteractionStylingMixin = {
     this.setState({ _interactionStateActive: false });
   }
 };
-
-/*
- * Convert a list of values in pixels to rems. For example:
- *    remCalc(16, 18, 32) # returns "1rem 1.125rem 2rem"
- * @param {Integer} remBase — The base body font size value in pixels
- * @param {Array} values — One or more values in pixels to be converted to rem
- * @return {String} Space delimited values that can be used in css styles
- */
-function remCalc(...values) {
-  var remBase = 16; // The base body font size value in pixels
-  return values.map((value) => `${value/remBase}rem`).join(" ");
-}
 
 /*
  * Random Mixin
@@ -211,7 +208,7 @@ var BoardStore = Object.assign({}, EventEmitter.prototype, {
 
 BoardStore.dispatchToken = Dispatcher.register(function(payload) {
   // Object with all supported actions by this store
-  var actions = {
+  let actions = {
   };
   // If this action type is one of the supported, invoke it
   if (actions[payload.action.type]) actions[payload.action.type](payload);
@@ -228,7 +225,7 @@ var ListStore = Object.assign({}, EventEmitter.prototype, {
 
 ListStore.dispatchToken = Dispatcher.register(function(payload) {
   // Object with all supported actions by this store
-  var actions = {
+  let actions = {
   };
   // If this action type is one of the supported, invoke it
   if (actions[payload.action.type]) actions[payload.action.type](payload);
@@ -245,7 +242,7 @@ var CardStore = Object.assign({}, EventEmitter.prototype, {
 
 CardStore.dispatchToken = Dispatcher.register(function(payload) {
   // Object with all supported actions by this store
-  var actions = {
+  let actions = {
     createCard(payload) {
       data.cards.push(payload.action.card);
       CardStore.emit('change');
@@ -284,34 +281,36 @@ export var IconButton = React.createClass({
   getDefaultProps() {
     return {
       icon: "menu",
-      onClick() {},
-      size: remCalc(24)
+      onClick() {}
     };
   },
-  styles: {
-    background: "none",
-    border: "none",
-    borderRadius: "50%",
-    cursor: "pointer",
-    lineHeight: 0,
-    outline: "none",
-    padding: remCalc(6),
-    transition: "background 250ms"
-  },
-  activeStyles: {
-    background: "rgba(0,0,0,.1)",
-    transition: "background 100ms"
-  },
   render() {
+    // Mixin methods can't be used inside `getDefaultProps`
+    let size = this.props.size || this.remCalc(24);
+
+    let styles = {
+      background: "none",
+      border: "none",
+      borderRadius: "50%",
+      cursor: "pointer",
+      lineHeight: 0,
+      outline: "none",
+      padding: this.remCalc(6),
+      transition: "background 250ms"
+    };
+    let activeStyles = {
+      background: "rgba(0,0,0,.1)",
+      transition: "background 100ms"
+    };
     return (
       <button
         {...this.trackInteractionStateActive()}
         style={this.mergeStyles(
-          this.styles,
-          this.interactionStateIsActive() && this.activeStyles
+          styles,
+          this.interactionStateIsActive() && activeStyles
         )}
         onClick={this.props.onClick}>
-        <Icon icon={this.props.icon} size={this.props.size}/>
+        <Icon icon={this.props.icon} size={size}/>
       </button>
     );
   }
@@ -321,16 +320,17 @@ export var IconButton = React.createClass({
  * Card Component
  */
 export var Card = React.createClass({
-  style: {
-    background: "white",
-    boxSizing: "border-box",
-    minHeight: remCalc(60),
-    padding: remCalc(10),
-    width: "100%"
-  },
+  mixins: [StylingMixin],
   render() {
+    let styles = {
+      background: "white",
+      boxSizing: "border-box",
+      minHeight: this.remCalc(60),
+      padding: this.remCalc(10),
+      width: "100%"
+    };
     return (
-      <div className="Card" style={this.style}>
+      <div className="Card" style={styles}>
         {this.props.children}
       </div>
     );
@@ -343,6 +343,7 @@ export var Card = React.createClass({
  * A simple ordered list of card components
  */
 export var CardList = React.createClass({
+  mixins: [StylingMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired
@@ -356,26 +357,11 @@ export var CardList = React.createClass({
   componentWillUnmount() {
     CardStore.removeListener("change", this._onStoreChange);
   },
-  styles: {
-    header: {
-      WebkitColumnBreakBefore: "always",
-      fontWeight: "bold"
-    },
-    list: {
-      listStyle: "none",
-      padding: 0
-    },
-    listItem: {
-      WebkitColumnBreakInside: "avoid",
-      display: "block",
-      marginBottom: remCalc(5)
-    }
-  },
   handleSubmit(e) {
     e.preventDefault();
 
-    var input = this.refs.cardName.getDOMNode();
-    var cardName = input.value.trim();
+    let input = this.refs.cardName.getDOMNode();
+    let cardName = input.value.trim();
     input.value = '';
 
     CardActions.create({
@@ -384,9 +370,24 @@ export var CardList = React.createClass({
     });
   },
   render() {
-    var cardNodes = this.state.cards.map((card, index) => {
+    let styles = {
+      header: {
+        WebkitColumnBreakBefore: "always",
+        fontWeight: "bold"
+      },
+      list: {
+        listStyle: "none",
+        padding: 0
+      },
+      listItem: {
+        WebkitColumnBreakInside: "avoid",
+        display: "block",
+        marginBottom: this.remCalc(5)
+      }
+    };
+    let cardNodes = this.state.cards.map((card, index) => {
       return (
-        <li style={this.styles.listItem} key={index}>
+        <li style={styles.listItem} key={index}>
           <Card>
             {card.name}
           </Card>
@@ -395,10 +396,10 @@ export var CardList = React.createClass({
     });
     return (
       <div className="CardList">
-        <div style={this.styles.header}>
+        <div style={styles.header}>
           {this.props.name}
         </div>
-        <ol className="CardList-cards" style={this.styles.list}>
+        <ol className="CardList-cards" style={styles.list}>
           {cardNodes}
         </ol>
         <form onSubmit={this.handleSubmit}>
@@ -423,6 +424,7 @@ export var CardList = React.createClass({
  * Currently, consists simply of a title and a list of lists of cards
  */
 export var Board = React.createClass({
+  mixins: [StylingMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired
   },
@@ -435,21 +437,21 @@ export var Board = React.createClass({
   componentWillUnmount() {
     ListStore.removeListener("change", this._onStoreChange);
   },
-  styles: {
-    WebkitColumnGap: remCalc(20),
-    WebkitColumnWidth: remCalc(260),
-    boxSizing: "border-box",
-    flex: 1,
-    padding: remCalc(20)
-  },
   render() {
-    var listNodes = this.state.lists.map(function(list, index) {
+    let styles = {
+      WebkitColumnGap: this.remCalc(20),
+      WebkitColumnWidth: this.remCalc(260),
+      boxSizing: "border-box",
+      flex: 1,
+      padding: this.remCalc(20)
+    };
+    let listNodes = this.state.lists.map(function(list, index) {
       return (
         <CardList key={index} id={list.id} name={list.name}/>
       );
     });
     return (
-      <div className="Board" style={this.styles}>
+      <div className="Board" style={styles}>
         {listNodes}
       </div>
     );
@@ -482,29 +484,29 @@ export var BoardChooser = React.createClass({
       open: false
     };
   },
-  styles: {
-    container: {
-      display: "inline-block"
-    },
-    dropdown: {
-      background: "white",
-      display: "none",
-      listStyle: "none",
-      margin: 0,
-      padding: remCalc(10),
-      position: "absolute"
-    },
-    dropdownOpen: {
-      display: "block"
-    }
-  },
   handleToggleClick() {
-    var newState = this.state.open ? false : true;
+    let newState = this.state.open ? false : true;
     this.setState({ open: newState });
   },
   render() {
-    var boardNodes = this.props.boards.map(function(board, index) {
-      var url = `/boards/${board.id}`;
+    let styles = {
+      container: {
+        display: "inline-block"
+      },
+      dropdown: {
+        background: "white",
+        display: "none",
+        listStyle: "none",
+        margin: 0,
+        padding: this.remCalc(10),
+        position: "absolute"
+      },
+      dropdownOpen: {
+        display: "block"
+      }
+    };
+    let boardNodes = this.props.boards.map(function(board, index) {
+      let url = `/boards/${board.id}`;
       return (
         <li key={index}>
           <a href={url}>{board.name}</a>
@@ -512,12 +514,12 @@ export var BoardChooser = React.createClass({
       );
     });
     return (
-      <div className="BoardChooser" style={this.styles.container}>
+      <div className="BoardChooser" style={styles.container}>
         <IconButton icon="menu" onClick={this.handleToggleClick}/>
         <ol className="BoardChooser-dropdown"
           style={this.mergeStyles(
-            this.styles.dropdown,
-            this.state.open && this.styles.dropdownOpen
+            styles.dropdown,
+            this.state.open && styles.dropdownOpen
           )}>
           {boardNodes}
         </ol>
@@ -532,6 +534,7 @@ export var BoardChooser = React.createClass({
  * Displays the board name and allows switching between boards
  */
 export var NavBar = React.createClass({
+  mixins: [StylingMixin],
   propTypes: {
     boards: React.PropTypes.array,
     currentBoard: React.PropTypes.object.isRequired,
@@ -539,33 +542,33 @@ export var NavBar = React.createClass({
   },
   getDefaultProps() {
     return {
-      boards: [],
-      height: remCalc(54)
+      boards: []
     };
   },
-  styles: {
-    container: {
-      alignItems: "center",
-      background: "white",
-      boxSizing: "border-box",
-      display: "flex",
-      padding: remCalc(20)
-    },
-    name: {
-      display: "block",
-      flex: 1,
-      fontSize: remCalc(20),
-      padding: remCalc(8)
-    }
-  },
-  componentWillMount() {
-    this.styles.container.height = this.props.height;
-  },
   render() {
+    // Mixin methods can't be used inside `getDefaultProps`
+    let height = this.props.height || this.remCalc(54);
+
+    let styles = {
+      container: {
+        alignItems: "center",
+        background: "white",
+        boxSizing: "border-box",
+        display: "flex",
+        height: height,
+        padding: this.remCalc(20)
+      },
+      name: {
+        display: "block",
+        flex: 1,
+        fontSize: this.remCalc(20),
+        padding: this.remCalc(8)
+      }
+    };
     return (
-      <div className="NavBar" style={this.styles.container}>
+      <div className="NavBar" style={styles.container}>
         <BoardChooser boards={this.props.boards}/>
-        <span style={this.styles.name}>{this.props.currentBoard.name}</span>
+        <span style={styles.name}>{this.props.currentBoard.name}</span>
       </div>
     );
   }
@@ -590,18 +593,18 @@ export var BoardWrapper = React.createClass({
   componentWillUnmount() {
     BoardStore.removeListener("change", this._onStoreChange);
   },
-  styles: {
-    background: "gainsboro",
-    display: "flex",
-    flexDirection: "column",
-    height: "100vh"
-  },
   render() {
+    let styles = {
+      background: "gainsboro",
+      display: "flex",
+      flexDirection: "column",
+      height: "100vh"
+    };
     if (!this.state.currentBoard) {
       return <h2>Board not found</h2>;
     }
     return (
-      <div style={this.styles}>
+      <div style={styles}>
         <NavBar currentBoard={this.state.currentBoard} boards={this.state.boards}/>
         <Board id={this.state.currentBoard.id}/>
       </div>
@@ -641,13 +644,11 @@ export var Router = React.createClass({
   componentDidMount() {
     this.registerRoutingListeners();
   },
-  onRouteChange(path) {
-    this.setState({
-      url: path
-    });
+  onRouteChange(url) {
+    this.setState({ url });
   },
   render() {
-    var url = this.state.url, params = {};
+    let url = this.state.url, params = {};
 
     switch (true) {
       // Show a specific board
@@ -667,11 +668,11 @@ export var Router = React.createClass({
  * The <!doctype> tag must be added afterwards since it is not valid JSX
  */
 export var SpaceHorse = React.createClass({
-  style: {
-    fontFamily: "Lato, sans-serif",
-    margin: 0
-  },
   render() {
+    let styles = {
+      fontFamily: "Lato, sans-serif",
+      margin: 0
+    };
     return (
       <html>
         <head>
@@ -680,7 +681,7 @@ export var SpaceHorse = React.createClass({
           <link rel="stylesheet"
             href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic"/>
         </head>
-        <body style={this.style}>
+        <body style={styles}>
           <Router {...this.props}/>
           <script src="/polyfill.js"></script>
           <script src="/app.js"></script>
@@ -694,7 +695,7 @@ export var SpaceHorse = React.createClass({
 // React will preserve the server-rendered markup and only attach event handlers
 if (Platform.browser) {
   window.onload = function() {
-    var currentPath = window.location.pathname;
+    let currentPath = window.location.pathname;
     React.render(<SpaceHorse startUrl={currentPath} />, document);
   };
 }
