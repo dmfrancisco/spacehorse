@@ -665,7 +665,12 @@ export var Router = React.createClass({
 /*
  * Main component
  *
- * The <!doctype> tag must be added afterwards since it is not valid JSX
+ * The <!doctype> tag must be added afterwards since it is not valid JSX.
+ *
+ * For production apps, a better approach would be to remove this component, move the
+ * JSX code to server.js and use a templating system or simply concatenate strings.
+ * Also, <Router> should be rendered inside a root <div>. This is important because
+ * 3rd-party libs and browser extensions frequently add elements to <body> & <head>.
  */
 export var SpaceHorse = React.createClass({
   render() {
