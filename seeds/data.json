@@ -22,28 +22,22 @@
   "cards": [
     {
       "listId": "3b88d1cb3884",
-      "id":  "4176d2c77535",
-      "name": "First card in the first list"
+      "id": "4176d2c77535"
     }, {
       "listId": "3b88d1cb3884",
-      "id":  "1af15de5a440",
-      "name": "Second card in the first list"
+      "id": "1af15de5a440"
     }, {
       "listId": "3b88d1cb3884",
-      "id":  "4eb49d52d7b4",
-      "name": "Third card in the first list"
+      "id": "4eb49d52d7b4"
     }, {
       "listId": "3b88d1cb3884",
-      "id":  "7ead6dd5d126",
-      "name": "Fourth card in the first list"
+      "id": "7ead6dd5d126"
     }, {
       "listId": "966d3fb872d1",
-      "id":  "95277025e2cf",
-      "name": "First card in the second list"
+      "id": "95277025e2cf"
     }, {
       "listId": "966d3fb872d1",
-      "id":  "d5f5eb2873cd",
-      "name": "Second card in the second list"
+      "id": "d5f5eb2873cd"
     }
   ]
 }

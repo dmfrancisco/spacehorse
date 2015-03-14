@@ -1,4 +1,4 @@
-/*jshint esnext:true, browserify:true */
+/*jshint esnext:true, browserify:true, devel:true */
 'use strict';
 
 import React from 'react';
@@ -6,7 +6,7 @@ import Flux from 'flux';
 import pathtoRegexp from 'path-to-regexp';
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
-import data from './seeds';
+import data from './seeds/data';
 import Icon from './icons.jsx';
 
 // Detect platforms (from TiddlyWiki's source)
@@ -174,6 +174,30 @@ var RandomMixin = {
 };
 
 /*
+ * Persistence
+ *
+ * Utility module to read and save data. This is currently a simple boilerplate.
+ */
+export var Persistence = {
+  sync(crudMethod, body) {
+    // Example implementation of server-side persistence via Ajax
+    //
+    // let methodMap = {
+    //   'create': 'POST',
+    //   'read':   'GET',
+    //   'update': 'PUT',
+    //   'delete': 'DELETE'
+    // };
+    // let method = methodMap[crudMethod];
+    // return window.fetch(this.url, { method, body });
+    //
+    return new Promise(function(resolve, reject) {
+      reject({ msg: "Not implemented" });
+    });
+  }
+};
+
+/*
  * Dispatcher
  *
  * A singleton that operates as the central hub for application updates.
@@ -197,7 +221,7 @@ export var Dispatcher = Object.assign(new Flux.Dispatcher(), {
 /*
  * Board Store
  */
-var BoardStore = Object.assign({}, EventEmitter.prototype, {
+export var BoardStore = Object.assign({}, EventEmitter.prototype, Persistence, {
   getBoard(id) {
     return data.boards.find((el) => el.id == id);
   },
@@ -217,7 +241,7 @@ BoardStore.dispatchToken = Dispatcher.register(function(payload) {
 /*
  * List Store
  */
-var ListStore = Object.assign({}, EventEmitter.prototype, {
+export var ListStore = Object.assign({}, EventEmitter.prototype, Persistence, {
   getAll(boardId) {
     return data.lists.filter((el) => el.boardId == boardId);
   }
@@ -234,7 +258,10 @@ ListStore.dispatchToken = Dispatcher.register(function(payload) {
 /*
  * Card Store
  */
-var CardStore = Object.assign({}, EventEmitter.prototype, {
+export var CardStore = Object.assign({}, EventEmitter.prototype, Persistence, {
+  getCard(id) {
+    return data.cards.find((el) => el.id == id);
+  },
   getAll(listId) {
     return data.cards.filter((el) => el.listId == listId);
   }
@@ -244,7 +271,15 @@ CardStore.dispatchToken = Dispatcher.register(function(payload) {
   // Object with all supported actions by this store
   let actions = {
     createCard(payload) {
-      data.cards.push(payload.action.card);
+      let card = payload.action.card;
+      data.cards.push(card);
+
+      CardStore.sync("create", card).then(function() {
+        console.log("New card saved successfully");
+      }).catch(function(e) {
+        console.error(`Oops, there was an error saving card ${card.id}: ${e.msg}`);
+      });
+
       CardStore.emit('change');
     }
   };
@@ -252,17 +287,33 @@ CardStore.dispatchToken = Dispatcher.register(function(payload) {
   if (actions[payload.action.type]) actions[payload.action.type](payload);
 });
 
+// This is a temporary method that loads the content of all existing cards
+CardStore.fetchContents = function() {
+  this.sync("read").then((response) => {
+    response.forEach(function(data) {
+      let card = CardStore.getCard(data.id);
+      if (card) Object.assign(card, data);
+    });
+
+    this.emit('change');
+
+    console.log("All cards read successfully");
+  }).catch(function(e) {
+    console.error(`Oops, there was an error reading cards: ${e.msg}`);
+  });
+};
+
 /*
  * Card Actions
  */
 var CardActions = {
-  create: function({ listId, id, name }) {
+  create: function({ listId, id, content }) {
     Dispatcher.handleViewAction({
       type: "createCard",
       card: {
         listId: listId,
         id: RandomMixin.id(),
-        name: name
+        content: content
       }
     });
   }
@@ -360,13 +411,15 @@ export var CardList = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
 
-    let input = this.refs.cardName.getDOMNode();
-    let cardName = input.value.trim();
+    let input = this.refs.cardContent.getDOMNode();
+    let cardContent = input.value.trim();
+
+    if (cardContent === "") return;
     input.value = '';
 
     CardActions.create({
       listId: this.props.id,
-      name: cardName
+      content: cardContent
     });
   },
   render() {
@@ -389,7 +442,7 @@ export var CardList = React.createClass({
       return (
         <li style={styles.listItem} key={index}>
           <Card>
-            {card.name}
+            {card.content || "Loading..."}
           </Card>
         </li>
       );
@@ -403,7 +456,7 @@ export var CardList = React.createClass({
           {cardNodes}
         </ol>
         <form onSubmit={this.handleSubmit}>
-          <input type="text" ref="cardName" />
+          <input type="text" ref="cardContent" />
         </form>
       </div>
     );
@@ -703,4 +756,7 @@ if (Platform.browser) {
     let currentPath = window.location.pathname;
     React.render(<SpaceHorse startUrl={currentPath} />, document);
   };
+
+  // For now, get all content for all existing cards
+  CardStore.fetchContents();
 }
