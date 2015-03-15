@@ -1,9 +1,9 @@
-/*jshint browserify:true */
+/*jshint browserify:true, unused:true */
 'use strict';
 
 var fs = require('fs');
 
-fs.watch("../", function() {
+fs.watch("../", { recursive: true }, function() {
   // Clear and delete node-webkit's global required modules cache
   // More info: http://stackoverflow.com/q/25143532
   for (var moduleName in global.require.cache) {

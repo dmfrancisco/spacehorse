@@ -1,4 +1,4 @@
-/*jshint esnext:true, browserify:true */
+/*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
 import React from 'react';
@@ -6,7 +6,7 @@ import React from 'react';
 /*
  * Subset of the SVG icon collection from the Polymer project (goo.gl/N7SB5G)
  */
-export default React.createClass({
+let Icon = React.createClass({
   propTypes: {
     icon: React.PropTypes.string.isRequired,
     size: React.PropTypes.string
@@ -47,3 +47,5 @@ export default React.createClass({
     );
   }
 });
+
+export default Icon;
