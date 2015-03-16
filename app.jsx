@@ -27,6 +27,7 @@ export var SpaceHorse = React.createClass({
         <head>
           <meta charSet="utf-8" />
           <title>SpaceHorse</title>
+          <link rel="stylesheet" href="/assets/app.css"/>
           <link rel="stylesheet"
             href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic"/>
         </head>

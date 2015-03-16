@@ -6,11 +6,15 @@
 require('babel/register');
 
 var React = require('react');
-var server = require('express')();
+var express = require('express');
+var server = express();
 
 // Require and wrap the React main component in a factory before calling it
 // This is necessary because we'll do `SpaceHorse()` instead of <SpaceHorse />
 var SpaceHorse = React.createFactory(require('./app.jsx').SpaceHorse);
+
+// Serve static files
+server.use('/assets', express.static('assets'));
 
 // Serve the JavaScript code to the client
 server.get('/app.js', function(req, res) {

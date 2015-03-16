@@ -2,6 +2,7 @@
 'use strict';
 
 import React from 'react';
+import Markdown from '../helpers/markdown';
 import StylingMixin from '../helpers/styling-mixin';
 
 /*
@@ -17,10 +18,15 @@ let Card = React.createClass({
       padding: this.remCalc(10),
       width: "100%"
     };
+    let content = this.props.children;
+    let renderedContent = Markdown.render(content);
+
     return (
-      <div className="Card" style={styles}>
-        {this.props.children}
-      </div>
+      <div
+        className="Card"
+        style={styles}
+        dangerouslySetInnerHTML={{__html: renderedContent}}
+      />
     );
   }
 });
