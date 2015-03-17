@@ -6,6 +6,7 @@ import MarkdownEmoji from 'markdown-it-emoji';
 import Twemoji from 'twemoji';
 import Highlight from 'highlight.js';
 import Platform from './platform';
+import truncate from 'html-truncate';
 
 /*
  * Markdown
@@ -23,6 +24,31 @@ let Markdown = {
     };
     // Call the new function
     return this.render(content);
+  },
+  // Renders only the first lines of the document and ignores images and links
+  renderExcerpt(content, options = { length: 700 }) {
+    let markdown = this._init();
+    let rules = markdown.renderer.rules;
+
+    let emptyRule = function(/*tokens, idx, options, env, self*/) {
+      return "";
+    };
+
+    // Don't render images
+    rules.image = emptyRule;
+
+    // Display links as text
+    rules.link_open = emptyRule;
+    rules.link_close = emptyRule;
+
+    // Overwrite the existing function
+    this.renderExcerpt = function(content, options = { length: 600 }) {
+      // TODO Avoid rendering the entire document
+      var renderedContent = markdown.render(content);
+      return truncate(renderedContent, options.length, { keepImageTag: true });
+    };
+    // Call the new function
+    return this.renderExcerpt(content, options);
   },
   _init() {
     let markdown = new MarkdownIt({

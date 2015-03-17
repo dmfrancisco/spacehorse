@@ -14,6 +14,7 @@
     "front-matter": "^1.0.0",
     "glob": "^5.0.3",
     "highlight.js": "^8.4.0",
+    "html-truncate": "^1.0.5",
     "markdown-it": "^4.0.1",
     "markdown-it-emoji": "^1.0.0",
     "path-to-regexp": "^1.0.3",
@@ -23,13 +24,19 @@
   "devDependencies": {
     "jsdom": "^3.1.2",
     "mocha": "^2.1.0",
+    "node-sass": "^3.0.0-alpha.0",
     "nodemon": "^1.3.7",
     "watchify": "^2.4.0"
   },
   "scripts": {
-    "start": "browserify app.jsx -t babelify --outfile app.js && node server.js",
-    "watch": "watchify app.jsx -t babelify --outfile app.js & nodemon server.js",
-    "test": "babel tests.jsx -o tests.js && mocha tests.js",
-    "desktop": "cd desktop && npm run desktop"
+    "start": "npm run build:css && npm run build:js && node server.js",
+    "start:desktop": "npm run build:css && cd desktop && npm run start",
+    "live": "npm run watch:css & npm run watch:js & nodemon server.js",
+    "live:desktop": "npm run watch:css & npm run start:desktop",
+    "build:css": "node-sass assets/app.scss -o assets",
+    "build:js": "browserify app.jsx -t babelify --outfile app.js",
+    "watch:css": "node-sass assets/app.scss -o assets -w assets/app.scss",
+    "watch:js": "watchify app.jsx -t babelify --outfile app.js",
+    "test": "babel tests.jsx -o tests.js && mocha tests.js"
   }
 }

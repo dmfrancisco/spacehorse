@@ -1,0 +1,30 @@
+.Document {
+  /* Remove the margin of the first and last elements */
+  & > *:first-child {
+    margin-top: 0 !important;
+  }
+  & > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  hr {
+    width: 20%;
+    border: none;
+    border-bottom: 1px solid;
+    margin: rem-calc(10) auto;
+  }
+}
+
+.Document--default {
+  /*
+   * TODO Styles for the typography of a document (note).
+   * Will have serifed fonts, bigger font size, etc.
+   */
+}
+
+.Document--excerpt {
+  /*
+   * TODO Styles for the excerpt that is displayed in the board.
+   * Will have smaller typography, smaller vertical margins, etc.
+   */
+}
