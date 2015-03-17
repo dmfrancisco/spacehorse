@@ -32,7 +32,7 @@
     "start": "npm run build:css && npm run build:js && node server.js",
     "start:desktop": "npm run build:css && cd desktop && npm run start",
     "live": "npm run watch:css & npm run watch:js & nodemon server.js",
-    "live:desktop": "npm run watch:css & npm run start:desktop",
+    "live:desktop": "npm run watch:css & NODE_ENV=development npm run start:desktop",
     "build:css": "node-sass assets/app.scss -o assets",
     "build:js": "browserify app.jsx -t babelify --outfile app.js",
     "watch:css": "node-sass assets/app.scss -o assets -w assets/app.scss",
