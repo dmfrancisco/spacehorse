@@ -9,19 +9,10 @@ import React from 'react';
 let Icon = React.createClass({
   propTypes: {
     icon: React.PropTypes.string.isRequired,
-    size: React.PropTypes.string
-  },
-  getDefaultProps() {
-    return {
-      size: '24px'
-    };
+    size: React.PropTypes.string.isRequired
   },
   renderGraphic() {
     switch (this.props.icon) {
-      case 'menu':
-        return (
-          <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></g>
-        );
       case 'arrow-down':
         return (
           <g><path d="M7.41 7.84l4.59 4.58 4.59-4.58 1.41 1.41-6 6-6-6z"/></g>
@@ -29,6 +20,16 @@ let Icon = React.createClass({
       case 'arrow-up':
         return (
           <g><path d="M7.41 15.41l4.59-4.58 4.59 4.58 1.41-1.41-6-6-6 6z"/></g>
+        );
+      case 'menu':
+        return (
+          <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></g>
+        );
+      case 'more-vert':
+        return (
+          <g><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1
+            0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2
+            2-.9 2-2-.9-2-2-2z"></path></g>
         );
     }
   },

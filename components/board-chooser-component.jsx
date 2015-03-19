@@ -30,15 +30,19 @@ let BoardChooser = React.createClass({
   render() {
     let styles = {
       container: {
-        display: "inline-block"
+        display: "inline-block",
+        position: "relative"
       },
       dropdown: {
         background: "white",
         display: "none",
+        lineHeight: "initial",
         listStyle: "none",
         margin: 0,
         padding: this.remCalc(10),
-        position: "absolute"
+        position: "absolute",
+        right: 0,
+        whiteSpace: "nowrap"
       },
       dropdownOpen: {
         display: "block"
@@ -54,7 +58,8 @@ let BoardChooser = React.createClass({
     });
     return (
       <div className="BoardChooser" style={styles.container}>
-        <IconButton icon="menu" onClick={this.handleToggleClick}/>
+        <IconButton icon="arrow-down" onClick={this.handleToggleClick}/>
+
         <ol className="BoardChooser-dropdown"
           style={this.mergeStyles(
             styles.dropdown,

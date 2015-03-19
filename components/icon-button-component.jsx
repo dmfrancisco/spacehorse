@@ -24,7 +24,7 @@ let IconButton = React.createClass({
   },
   render() {
     // Mixin methods can't be used inside `getDefaultProps`
-    let size = this.props.size || this.remCalc(24);
+    let size = this.props.size || this.remCalc(18);
 
     let styles = {
       background: "none",
@@ -33,8 +33,9 @@ let IconButton = React.createClass({
       cursor: "pointer",
       lineHeight: 0,
       outline: "none",
-      padding: this.remCalc(6),
-      transition: "background 250ms"
+      padding: this.remCalc(2),
+      transition: "background 250ms",
+      verticalAlign: "middle"
     };
     let activeStyles = {
       background: "rgba(0,0,0,.1)",

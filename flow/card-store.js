@@ -4,7 +4,7 @@
 import {EventEmitter} from 'events';
 import Persistence from './persistence';
 import Dispatcher from './dispatcher';
-import data from '../seeds/data';
+import data from '../seeds/data'; // TODO
 
 /*
  * Card Store

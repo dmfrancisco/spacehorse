@@ -2,6 +2,7 @@
 'use strict';
 
 import React from 'react';
+import ConfigStore from '../flow/config-store';
 import RoutingMixin from '../helpers/routing-mixin';
 import BoardWrapper from './board-wrapper-component.jsx';
 
@@ -22,8 +23,15 @@ let Router = React.createClass({
   },
   getInitialState() {
     return {
-      url: this.props.startUrl
+      url: this.props.startUrl,
+      config: this._getConfigFromStore()
     };
+  },
+  componentWillMount() {
+    ConfigStore.addListener("change", this._onStoreChange);
+  },
+  componentWillUnmount() {
+    ConfigStore.removeListener("change", this._onStoreChange);
   },
   componentDidMount() {
     this.registerRoutingListeners();
@@ -38,11 +46,21 @@ let Router = React.createClass({
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
         return (
-          <BoardWrapper key={params.boardId} currentBoardId={params.boardId}/>
+          <BoardWrapper
+            key={params.boardId}
+            currentBoardId={params.boardId}
+            appName={this.state.config.appName}
+          />
         );
       default:
         return <h1>Page not found</h1>;
     }
+  },
+  _onStoreChange() {
+    this.setState({ config: this._getConfigFromStore() });
+  },
+  _getConfigFromStore() {
+    return ConfigStore.getAll();
   }
 });
 

@@ -4,6 +4,7 @@
 import React from 'react';
 import StylingMixin from '../helpers/styling-mixin';
 import BoardChooser from './board-chooser-component.jsx';
+import IconButton from './icon-button-component.jsx';
 
 /*
  * NavBar Component
@@ -13,8 +14,9 @@ import BoardChooser from './board-chooser-component.jsx';
 let NavBar = React.createClass({
   mixins: [StylingMixin],
   propTypes: {
+    appName: React.PropTypes.string.isRequired,
     boards: React.PropTypes.array,
-    currentBoard: React.PropTypes.object.isRequired,
+    currentBoardName: React.PropTypes.string.isRequired,
     height: React.PropTypes.string
   },
   getDefaultProps() {
@@ -24,7 +26,7 @@ let NavBar = React.createClass({
   },
   render() {
     // Mixin methods can't be used inside `getDefaultProps`
-    let height = this.props.height || this.remCalc(54);
+    let height = this.props.height || this.remCalc(50);
 
     let styles = {
       container: {
@@ -35,17 +37,26 @@ let NavBar = React.createClass({
         height: height,
         padding: this.remCalc(20)
       },
-      name: {
-        display: "block",
+      titleArea: {
         flex: 1,
-        fontSize: this.remCalc(20),
+        lineHeight: height
+      },
+      title: {
+        fontSize: this.remCalc(18),
+        fontWeight: "bold",
         padding: this.remCalc(8)
       }
     };
     return (
       <div className="NavBar" style={styles.container}>
-        <BoardChooser boards={this.props.boards}/>
-        <span style={styles.name}>{this.props.currentBoard.name}</span>
+        <div style={styles.titleArea}>
+          <span style={styles.title}>{this.props.appName} </span>
+          <span>Organized by {this.props.currentBoardName} </span>
+          <BoardChooser boards={this.props.boards} />
+        </div>
+
+        {/* TODO Move this button to a new AppActions component */}
+        <IconButton icon="more-vert" size={this.remCalc(24)}/>
       </div>
     );
   }

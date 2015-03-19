@@ -14,6 +14,7 @@ import Board from './board-component.jsx';
  */
 let BoardWrapper = React.createClass({
   propTypes: {
+    appName: React.PropTypes.string.isRequired,
     currentBoardId: React.PropTypes.string.isRequired,
   },
   getInitialState() {
@@ -37,7 +38,11 @@ let BoardWrapper = React.createClass({
     }
     return (
       <div style={styles}>
-        <NavBar currentBoard={this.state.currentBoard} boards={this.state.boards}/>
+        <NavBar
+          currentBoardName={this.state.currentBoard.name}
+          boards={this.state.boards}
+          appName={this.props.appName}
+        />
         <Board id={this.state.currentBoard.id}/>
       </div>
     );

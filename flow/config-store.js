@@ -4,18 +4,18 @@
 import {EventEmitter} from 'events';
 import Persistence from './persistence';
 import Dispatcher from './dispatcher';
-import data from '../seeds/data'; // TODO
+import config from '../seeds/config'; // TODO
 
 /*
- * List Store
+ * Config Store
  */
-let ListStore = Object.assign({}, EventEmitter.prototype, Persistence, {
-  getAll(boardId) {
-    return data.lists.filter((el) => el.boardId == boardId);
+let ConfigStore = Object.assign({}, EventEmitter.prototype, Persistence, {
+  getAll() {
+    return config;
   }
 });
 
-ListStore.dispatchToken = Dispatcher.register(function(payload) {
+ConfigStore.dispatchToken = Dispatcher.register(function(payload) {
   // Object with all supported actions by this store
   let actions = {
   };
@@ -23,4 +23,4 @@ ListStore.dispatchToken = Dispatcher.register(function(payload) {
   if (actions[payload.action.type]) actions[payload.action.type](payload);
 });
 
-export default ListStore;
+export default ConfigStore;
