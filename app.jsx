@@ -22,14 +22,15 @@ export var SpaceHorse = React.createClass({
       fontFamily: "Lato, sans-serif",
       margin: 0
     };
+    let fonts = "Source+Sans+Pro:300,400,600,700,400italic,600italic,700italic|" +
+      "Source+Code+Pro:400,700|Source+Serif+Pro:700,400";
     return (
       <html>
         <head>
           <meta charSet="utf-8" />
           <title>SpaceHorse</title>
           <link rel="stylesheet" href="/assets/app.css"/>
-          <link rel="stylesheet"
-            href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic,700italic"/>
+          <link rel="stylesheet" href={`//fonts.googleapis.com/css?family=${fonts}`}/>
         </head>
         <body style={styles}>
           <Router {...this.props}/>
