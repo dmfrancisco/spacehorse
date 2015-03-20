@@ -42,7 +42,8 @@ let BoardChooser = React.createClass({
         padding: this.remCalc(10),
         position: "absolute",
         right: 0,
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
+        zIndex: "100"
       },
       dropdownOpen: {
         display: "block"

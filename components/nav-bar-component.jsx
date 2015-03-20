@@ -17,7 +17,7 @@ let NavBar = React.createClass({
     appName: React.PropTypes.string.isRequired,
     boards: React.PropTypes.array,
     currentBoardName: React.PropTypes.string.isRequired,
-    height: React.PropTypes.string
+    height: React.PropTypes.string.isRequired,
   },
   getDefaultProps() {
     return {
@@ -25,21 +25,18 @@ let NavBar = React.createClass({
     };
   },
   render() {
-    // Mixin methods can't be used inside `getDefaultProps`
-    let height = this.props.height || this.remCalc(50);
-
     let styles = {
       container: {
         alignItems: "center",
         background: "white",
         boxSizing: "border-box",
         display: "flex",
-        height: height,
+        height: this.props.height,
         padding: this.remCalc(20)
       },
       titleArea: {
         flex: 1,
-        lineHeight: height
+        lineHeight: this.props.height
       },
       title: {
         fontSize: this.remCalc(18),

@@ -2,6 +2,7 @@
 'use strict';
 
 import React from 'react';
+import StylingMixin from '../helpers/styling-mixin';
 import BoardStore from '../flow/board-store';
 import NavBar from './nav-bar-component.jsx';
 import Board from './board-component.jsx';
@@ -13,6 +14,7 @@ import Board from './board-component.jsx';
  * Acts as a Controller View from Flux by listening to changes in the store.
  */
 let BoardWrapper = React.createClass({
+  mixins: [StylingMixin],
   propTypes: {
     appName: React.PropTypes.string.isRequired,
     currentBoardId: React.PropTypes.string.isRequired,
@@ -27,23 +29,35 @@ let BoardWrapper = React.createClass({
     BoardStore.removeListener("change", this._onStoreChange);
   },
   render() {
+    let navBarHeight = this.remCalc(50);
+
     let styles = {
-      background: "gainsboro",
-      display: "flex",
-      flexDirection: "column",
-      height: "100vh"
+      container: {
+        background: "gainsboro",
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh"
+      },
+      board: {
+        flex: 1,
+        height: `calc(100vh - ${navBarHeight})`,
+        overflowX: "auto"
+      }
     };
     if (!this.state.currentBoard) {
       return <h2>Board not found</h2>;
     }
     return (
-      <div style={styles}>
+      <div style={styles.container}>
         <NavBar
           currentBoardName={this.state.currentBoard.name}
           boards={this.state.boards}
           appName={this.props.appName}
+          height={navBarHeight}
         />
-        <Board id={this.state.currentBoard.id}/>
+        <div style={styles.board}>
+          <Board id={this.state.currentBoard.id}/>
+        </div>
       </div>
     );
   },

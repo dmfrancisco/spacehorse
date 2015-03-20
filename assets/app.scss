@@ -7,3 +7,15 @@
 
 /* Styles targeting individual pages and specific user interface elements */
 @import "document";
+
+/* Disable overscroll (bouncing scroll effect on OS X) */
+html, body {
+  width: 100%;
+  height: 100%;
+}
+html {
+  overflow: hidden;
+}
+body {
+  overflow: auto;
+}

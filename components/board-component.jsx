@@ -30,8 +30,9 @@ let Board = React.createClass({
       WebkitColumnGap: this.remCalc(20),
       WebkitColumnWidth: this.remCalc(260),
       boxSizing: "border-box",
-      flex: 1,
-      padding: this.remCalc(20)
+      height: "inherit",
+      padding: this.remCalc(20),
+      width: this.remCalc(260) // Remove for fluid column width
     };
     let listNodes = this.state.lists.map(function(list, index) {
       return (
