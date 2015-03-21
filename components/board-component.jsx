@@ -27,7 +27,7 @@ let Board = React.createClass({
   },
   render() {
     let styles = {
-      WebkitColumnGap: this.remCalc(20),
+      WebkitColumnGap: this.remCalc(8),
       WebkitColumnWidth: this.remCalc(260),
       boxSizing: "border-box",
       height: "inherit",

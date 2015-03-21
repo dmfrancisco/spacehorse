@@ -1,3 +1,9 @@
+// Common variables to define font weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
 .Document {
   /* Remove the margin of the first and last elements */
   & > *:first-child {
@@ -6,30 +12,216 @@
   & > *:last-child {
     margin-bottom: 0 !important;
   }
+}
+
+/*
+ * Styles for the typography of a document (note).
+ * Based on Ródão, a minimalist theme for Ghost.
+ */
+.Document-default {
+  // Container dimensions and position
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: rem-calc(700);
+  min-height: 100vh;
+  padding: rem-calc(80);
+
+  // Base styles
+  font-family: Source Serif Pro, serif;
+  font-size: 1.2rem; // Change this to make everything smaller or larger
+  line-height: 1.6em;
+  color: #000;
+
+  // We use these as default color throughout
+  $grey: #efefef;
+
+  // This is a matter of taste and can be safely removed
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: $font-weight-bold;
+    line-height: 1;
+    margin-top: 0;
+  }
+
+  h1 {
+    font-size: 2.25em;
+    letter-spacing: -1px;
+    line-height: 1.2em;
+    text-indent: -1px;
+  }
+
+  h2 {
+    font-size: 2em;
+    letter-spacing: -1px;
+    line-height: 1.2em;
+    text-indent: -1px;
+  }
+
+  h3 {
+    font-size: 1.75em;
+  }
+
+  h4 {
+    font-size: 1.5em;
+  }
+
+  h5 {
+    font-size: 1.25em;
+  }
+
+  h6 {
+    font-size: 1em;
+  }
+
+  a {
+    border-bottom: 1px solid;
+    color: inherit;
+    text-decoration: none;
+    word-wrap: break-word;
+  }
 
   hr {
-    width: 20%;
+    border: 0;
+    border-top: 1px solid $grey;
+    display: block;
+    height: 1px;
+    margin: 3.2em auto;
+    padding: 0;
+    width: 50%;
+  }
+
+  p, ul, ol, dl {
+    margin: 1.6em 0;
+  }
+
+  ol ol, ul ul,
+  ul ol, ol ul {
+    margin: 0.4em 0;
+  }
+
+  blockquote {
+    border-left: $grey 0.4em solid;
+    box-sizing: border-box;
+    margin: 1.6em 0 1.6em -2em;
+    padding: 0 0 0 1.6em;
+  }
+
+  blockquote p {
+    font-style: italic;
+    margin: 0.8em 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  strong {
+    -webkit-font-smoothing: initial;
+    font-weight: $font-weight-semibold;
+  }
+
+  pre, code, tt {
+    font-family: Source Code Pro, monospace, sans-serif;
+  }
+
+  code, tt {
+    border: 1px solid $grey;
+    font-size: 0.85em;
+    padding: 1px 3px;
+  }
+
+  pre {
+    border: 1px solid $grey;
+    box-sizing: border-box;
+    font-size: 0.9em;
+    margin: 1.6em 0;
+    overflow: auto;
+    padding: 10px;
+    width: 100%;
+  }
+
+  pre code, tt {
+    background: transparent;
     border: none;
-    border-bottom: 1px solid;
-    margin: rem-calc(10) auto;
+    font-size: inherit;
+    padding: 0;
   }
 }
 
-.Document-default {
-  /*
-   * TODO Styles for the typography of a document (note).
-   * Will have serifed fonts, bigger font size, etc.
-   */
-  box-sizing: border-box;
-  margin: 0 auto;
-  max-width: rem-calc(800);
-  min-height: 100vh;
-  padding: rem-calc(40);
-}
-
+/*
+ * Styles for the excerpt that is displayed in the board.
+ * Defines smaller typography, smaller vertical margins, etc.
+ */
 .Document-excerpt {
-  /*
-   * TODO Styles for the excerpt that is displayed in the board.
-   * Will have smaller typography, smaller vertical margins, etc.
-   */
+  $base-height: rem-calc(20);
+
+  // Base properties
+  font-size: rem-calc(14);
+  line-height: $base-height;
+
+  /* Headings */
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: $base-height;
+    margin: 0;
+
+    // Truncate content if necessary
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+  }
+  h1, h2 {
+    font-size: rem-calc(16);
+    -webkit-line-clamp: 2;
+
+    // The combination of these two keeps vertical rhythm for both 1 and 2 lines
+    margin-bottom: rem-calc(18);
+    margin-top: rem-calc(2);
+  }
+  & > h1:first-child,
+  & > h2:first-child {
+    margin-top: rem-calc(2) !important;
+  }
+  h1 {
+    font-weight: $font-weight-bold;
+  }
+  h2 {
+    font-weight: $font-weight-semibold;
+  }
+  h3, h4, h5, h6 {
+    font-weight: $font-weight-semibold;
+    font-size: rem-calc(14);
+    -webkit-line-clamp: 1;
+  }
+  h4, h5, h6 {
+    font-size: rem-calc(12);
+    text-transform: uppercase;
+  }
+  h1 + h1,
+  h1 + h2,
+  h2 + h2 {
+    margin-top: -$base-height/2;
+    margin-bottom: $base-height/2;
+  }
+
+  /* Others */
+
+  p {
+    margin-top: 0;
+    margin-bottom: $base-height;
+  }
+  hr {
+    border: none;
+    border-bottom: 1px solid;
+    margin: $base-height/2 auto;
+    width: 20%;
+  }
+  p + hr {
+    // Try to keep the vertical rhythm
+    margin-top: -1 * ($base-height/2 + rem-calc(1));
+  }
 }

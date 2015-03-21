@@ -33,7 +33,7 @@ let BoardWrapper = React.createClass({
 
     let styles = {
       container: {
-        background: "gainsboro",
+        background: "#e7e7e7",
         display: "flex",
         flexDirection: "column",
         height: "100vh"

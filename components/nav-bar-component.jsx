@@ -40,8 +40,8 @@ let NavBar = React.createClass({
       },
       title: {
         fontSize: this.remCalc(18),
-        fontWeight: "bold",
-        padding: this.remCalc(8)
+        fontWeight: "600",
+        padding: this.remCalc(10)
       }
     };
     return (

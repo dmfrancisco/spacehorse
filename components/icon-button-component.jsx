@@ -39,7 +39,7 @@ let IconButton = React.createClass({
     };
     let activeStyles = {
       background: "rgba(0,0,0,.1)",
-      transition: "background 100ms"
+      transition: "none"
     };
     return (
       <button

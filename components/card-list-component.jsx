@@ -48,22 +48,30 @@ let CardList = React.createClass({
     let styles = {
       header: {
         WebkitColumnBreakBefore: "always",
-        fontWeight: "bold"
+        fontSize: this.remCalc(14),
+        height: headerHeight,
+        textAlign: "center"
       },
       list: {
         listStyle: "none",
-        padding: 0
+        padding: 0,
+        marginTop: 0
       },
       listItem: {
         WebkitColumnBreakInside: "avoid",
         display: "block",
-        marginBottom: this.remCalc(5)
+        marginBottom: this.remCalc(5),
+
+        // -webkit-columns removes the margin on top. This little trick allow us
+        // to align cards that have a list header above with the ones that don't
+        paddingTop: headerHeight,
+        marginTop: `calc(${headerHeight} * -1)`,
       }
     };
     let cardNodes = this.state.cards.map((card, index) => {
       return (
         <li className="CardList-card" style={styles.listItem} key={index}>
-          <Card id={card.id} boardId={this.props.boardId} headerHeight={headerHeight}>
+          <Card id={card.id} boardId={this.props.boardId}>
             {card.content || "Loading..."}
           </Card>
         </li>
