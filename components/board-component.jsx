@@ -36,7 +36,7 @@ let Board = React.createClass({
     };
     let listNodes = this.state.lists.map(function(list, index) {
       return (
-        <CardList key={index} id={list.id} name={list.name}/>
+        <CardList key={index} id={list.id} boardId={list.boardId} name={list.name}/>
       );
     });
     return (

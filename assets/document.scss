@@ -15,14 +15,19 @@
   }
 }
 
-.Document--default {
+.Document-default {
   /*
    * TODO Styles for the typography of a document (note).
    * Will have serifed fonts, bigger font size, etc.
    */
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: rem-calc(800);
+  min-height: 100vh;
+  padding: rem-calc(40);
 }
 
-.Document--excerpt {
+.Document-excerpt {
   /*
    * TODO Styles for the excerpt that is displayed in the board.
    * Will have smaller typography, smaller vertical margins, etc.

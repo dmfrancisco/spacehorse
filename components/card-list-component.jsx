@@ -16,6 +16,7 @@ let CardList = React.createClass({
   mixins: [StylingMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired,
+    boardId: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired
   },
   getInitialState() {
@@ -42,6 +43,8 @@ let CardList = React.createClass({
     });
   },
   render() {
+    let headerHeight = this.remCalc(22);
+
     let styles = {
       header: {
         WebkitColumnBreakBefore: "always",
@@ -59,8 +62,8 @@ let CardList = React.createClass({
     };
     let cardNodes = this.state.cards.map((card, index) => {
       return (
-        <li style={styles.listItem} key={index}>
-          <Card>
+        <li className="CardList-card" style={styles.listItem} key={index}>
+          <Card id={card.id} boardId={this.props.boardId} headerHeight={headerHeight}>
             {card.content || "Loading..."}
           </Card>
         </li>

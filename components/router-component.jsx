@@ -5,6 +5,7 @@ import React from 'react';
 import ConfigStore from '../flow/config-store';
 import RoutingMixin from '../helpers/routing-mixin';
 import BoardWrapper from './board-wrapper-component.jsx';
+import Document from './document-component.jsx';
 
 /*
  * Router Component
@@ -43,14 +44,30 @@ let Router = React.createClass({
     let url = this.state.url, params = {};
 
     switch (true) {
+      // Show a specific card and board
+      case this.matchesRoute('/boards/:boardId/cards/:cardId', url, params):
+        return (
+          <div id="container">
+            <Document
+              cardId={params.cardId}
+            />
+            <BoardWrapper
+              key={params.boardId}
+              currentBoardId={params.boardId}
+              appName={this.state.config.appName}
+            />
+          </div>
+        );
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
         return (
-          <BoardWrapper
-            key={params.boardId}
-            currentBoardId={params.boardId}
-            appName={this.state.config.appName}
-          />
+          <div id="container">
+            <BoardWrapper
+              key={params.boardId}
+              currentBoardId={params.boardId}
+              appName={this.state.config.appName}
+            />
+          </div>
         );
       default:
         return <h1>Page not found</h1>;

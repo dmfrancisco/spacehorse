@@ -10,41 +10,49 @@ import StylingMixin from '../helpers/styling-mixin';
  */
 let Card = React.createClass({
   mixins: [StylingMixin],
+  propTypes: {
+    id: React.PropTypes.string.isRequired,
+    boardId: React.PropTypes.string.isRequired,
+    headerHeight: React.PropTypes.string.isRequired
+  },
   render() {
     let styles = {
       container: {
+        overflow: "hidden"
+      },
+      content: {
         background: "white",
         boxSizing: "border-box",
+        color: "inherit",
+        display: "block",
+        fontSize: this.remCalc(14),
         maxHeight: this.remCalc(290),
         minHeight: this.remCalc(60),
         overflow: "hidden",
         padding: this.remCalc(10),
-        position: "relative",
+        textDecoration: "none",
         width: "100%"
-      },
-      content: {
-        fontSize: this.remCalc(14),
-        overflow: "hidden"
       },
       after: {
-        background: "linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%)",
-        bottom: 0,
-        height: this.remCalc(13),
-        position: "absolute",
-        left: 0,
-        width: "100%"
+        // It makes more sense to use a gradient background on an element
+        // with position absolute. The problem is that adding position relative
+        // to elements inside -webkit-columns is very buggy.
+        outline: `${this.remCalc(10)} solid rgba(255,255,255,.8)`
       }
     };
 
     let content = this.props.children;
     let renderedContent = Markdown.renderExcerpt(content);
+    let href = `/boards/${this.props.boardId}/cards/${this.props.id}`;
 
     return (
       <div className="Card" style={styles.container}>
-        <div
-          className="Document Document--excerpt"
+        <a
+          className="Card-content Document Document-excerpt"
           style={styles.content}
-          dangerouslySetInnerHTML={{__html: renderedContent}} />
+          href={href}
+          dangerouslySetInnerHTML={{__html: renderedContent}}
+        />
         <div className="Card-after" style={styles.after} />
       </div>
     );
