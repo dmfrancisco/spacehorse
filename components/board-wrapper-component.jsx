@@ -1,11 +1,13 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import BoardStore from '../flow/board-store';
 import NavBar from './nav-bar-component.jsx';
 import Board from './board-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Board Wrapper Component
@@ -14,7 +16,7 @@ import Board from './board-component.jsx';
  * Acts as a Controller View from Flux by listening to changes in the store.
  */
 let BoardWrapper = React.createClass({
-  mixins: [StylingMixin],
+  mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
     appName: React.PropTypes.string.isRequired,
     currentBoardId: React.PropTypes.string.isRequired,

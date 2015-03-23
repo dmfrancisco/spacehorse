@@ -1,12 +1,15 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Subset of the SVG icon collection from the Polymer project (goo.gl/N7SB5G)
  */
 let Icon = React.createClass({
+  mixins: [PureRenderMixin],
   propTypes: {
     icon: React.PropTypes.string.isRequired,
     size: React.PropTypes.string.isRequired

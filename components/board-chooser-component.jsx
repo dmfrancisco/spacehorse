@@ -1,15 +1,17 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import IconButton from './icon-button-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Board Chooser Component
  */
 let BoardChooser = React.createClass({
-  mixins: [StylingMixin],
+  mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
     boards: React.PropTypes.array
   },

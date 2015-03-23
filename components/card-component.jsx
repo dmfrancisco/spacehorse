@@ -1,16 +1,18 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import Markdown from '../helpers/markdown';
 import StylingMixin from '../helpers/styling-mixin';
 import InteractionStylingMixin from '../helpers/interaction-styling-mixin';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Card Component
  */
 let Card = React.createClass({
-  mixins: [StylingMixin, InteractionStylingMixin],
+  mixins: [StylingMixin, InteractionStylingMixin, PureRenderMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired,
     boardId: React.PropTypes.string.isRequired

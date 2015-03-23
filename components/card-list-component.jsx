@@ -1,11 +1,13 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import CardStore from '../flow/card-store';
 import CardActions from '../flow/card-actions';
 import Card from './card-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * CardList Component
@@ -13,7 +15,7 @@ import Card from './card-component.jsx';
  * A simple ordered list of card components
  */
 let CardList = React.createClass({
-  mixins: [StylingMixin],
+  mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired,
     boardId: React.PropTypes.string.isRequired,

@@ -1,14 +1,17 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import Markdown from '../helpers/markdown';
 import CardStore from '../flow/card-store';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Document Component
  */
 export default React.createClass({
+  mixins: [PureRenderMixin],
   propTypes: {
     cardId: React.PropTypes.string.isRequired
   },

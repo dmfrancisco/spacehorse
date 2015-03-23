@@ -1,16 +1,18 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import InteractionStylingMixin from '../helpers/interaction-styling-mixin';
 import Icon from './icon-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Icon Button Component
  */
 let IconButton = React.createClass({
-  mixins: [StylingMixin, InteractionStylingMixin],
+  mixins: [StylingMixin, InteractionStylingMixin, PureRenderMixin],
   propTypes: {
     icon: React.PropTypes.string,
     onClick: React.PropTypes.func,

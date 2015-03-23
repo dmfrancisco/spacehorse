@@ -1,10 +1,12 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import ListStore from '../flow/list-store';
 import CardList from './card-list-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * Board Component
@@ -12,7 +14,7 @@ import CardList from './card-list-component.jsx';
  * Currently, consists simply of a title and a list of lists of cards
  */
 let Board = React.createClass({
-  mixins: [StylingMixin],
+  mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
     id: React.PropTypes.string.isRequired
   },

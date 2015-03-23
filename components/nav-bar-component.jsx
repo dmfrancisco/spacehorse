@@ -1,10 +1,12 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import StylingMixin from '../helpers/styling-mixin';
 import BoardChooser from './board-chooser-component.jsx';
 import IconButton from './icon-button-component.jsx';
+
+let PureRenderMixin = React.addons.PureRenderMixin;
 
 /*
  * NavBar Component
@@ -12,7 +14,7 @@ import IconButton from './icon-button-component.jsx';
  * Displays the board name and allows switching between boards
  */
 let NavBar = React.createClass({
-  mixins: [StylingMixin],
+  mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
     appName: React.PropTypes.string.isRequired,
     boards: React.PropTypes.array,
