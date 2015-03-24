@@ -1,10 +1,11 @@
 /*jshint esnext:true, browserify:true, unused:true */
 'use strict';
 
-import React from 'react';
+import React from 'react/addons';
 import ConfigStore from '../flow/config-store';
 import RoutingMixin from '../helpers/routing-mixin';
 import BoardWrapper from './board-wrapper-component.jsx';
+import Scroller from './scroller-component.jsx';
 import Document from './document-component.jsx';
 
 /*
@@ -47,8 +48,9 @@ let Router = React.createClass({
       // Show a specific card and board
       case this.matchesRoute('/boards/:boardId/cards/:cardId', url, params):
         return (
-          <div id="container">
+          <Scroller id="container" position="smooth-top">
             <Document
+              key={params.cardId}
               cardId={params.cardId}
             />
             <BoardWrapper
@@ -56,18 +58,18 @@ let Router = React.createClass({
               currentBoardId={params.boardId}
               appName={this.state.config.appName}
             />
-          </div>
+          </Scroller>
         );
       // Show a specific board
       case this.matchesRoute('/boards/:boardId', url, params):
         return (
-          <div id="container">
+          <Scroller id="container">
             <BoardWrapper
               key={params.boardId}
               currentBoardId={params.boardId}
               appName={this.state.config.appName}
             />
-          </div>
+          </Scroller>
         );
       default:
         return <h1>Page not found</h1>;

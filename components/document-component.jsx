@@ -15,10 +15,6 @@ export default React.createClass({
   propTypes: {
     cardId: React.PropTypes.string.isRequired
   },
-  componentDidUpdate: function() {
-    // Scroll to top
-    document.getElementById("container").scrollTop = 0;
-  },
   render() {
     let card = CardStore.getCard(this.props.cardId);
     let renderedContent = Markdown.render(card.content);
