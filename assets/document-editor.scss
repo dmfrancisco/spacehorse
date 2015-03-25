@@ -1,0 +1,37 @@
+/* Dependencies */
+@import "vendor/codemirror";
+
+// Automatically resize CodeMirror to fit its content
+.CodeMirror,
+.CodeMirror-scroll {
+  height: auto;
+}
+
+// A minimal (for now monochromatic) theme for CodeMirror
+.cm-s-spacehorse-bright {
+  font-family: Source Code Pro, monospace, sans-serif;
+  color: #000;
+
+  .cm-header {
+    font-size: 1.4em;
+    line-height: 1.4em;
+  }
+
+  .cm-header,
+  .cm-string,
+  .cm-strong,
+  .cm-link,
+  .cm-comment,
+  .cm-quote,
+  .cm-number,
+  .cm-atom,
+  .cm-tag {
+    font-weight: bold;
+  }
+
+  .CodeMirror-focused,
+  .CodeMirror-selected,
+  ::selection {
+    background: #d7d4f0;
+  }
+}

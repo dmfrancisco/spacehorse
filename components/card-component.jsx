@@ -68,7 +68,7 @@ let Card = React.createClass({
         )}
         className="Card">
           <a style={styles.content}
-            className="Card-content Document Document-excerpt"
+            className="Card-content DocumentPreview DocumentPreview-excerpt"
             href={href}
             dangerouslySetInnerHTML={{__html: renderedContent}}
           />

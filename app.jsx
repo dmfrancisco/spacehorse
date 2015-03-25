@@ -23,7 +23,7 @@ export var SpaceHorse = React.createClass({
       margin: 0
     };
     let fonts = "Source+Sans+Pro:300,400,600,700,400italic,600italic,700italic|" +
-      "Source+Code+Pro:400,700|Source+Serif+Pro:700,400";
+      "Source+Code+Pro:400,600|Source+Serif+Pro:700,400";
     return (
       <html>
         <head>

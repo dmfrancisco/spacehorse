@@ -4,7 +4,7 @@ $font-weight-normal: 400;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
-.Document {
+.DocumentPreview {
   /* Remove the margin of the first and last elements */
   & > *:first-child {
     margin-top: 0 !important;
@@ -18,18 +18,9 @@ $font-weight-bold: 700;
  * Styles for the typography of a document (note).
  * Based on Ródão, a minimalist theme for Ghost.
  */
-.Document-default {
-  // Container dimensions and position
-  box-sizing: border-box;
-  margin: 0 auto;
-  max-width: rem-calc(700);
-  min-height: 100vh;
-  padding: rem-calc(80);
-
+.DocumentPreview-default {
   // Base styles
   font-family: Source Serif Pro, serif;
-  font-size: 1.2rem; // Change this to make everything smaller or larger
-  line-height: 1.6em;
   color: #000;
 
   // We use these as default color throughout
@@ -155,7 +146,7 @@ $font-weight-bold: 700;
  * Styles for the excerpt that is displayed in the board.
  * Defines smaller typography, smaller vertical margins, etc.
  */
-.Document-excerpt {
+.DocumentPreview-excerpt {
   $base-height: rem-calc(20);
 
   // Base properties

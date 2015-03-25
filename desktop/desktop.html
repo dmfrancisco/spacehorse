@@ -21,6 +21,13 @@
   </head>
   <body>
     <script>
+      // Add default menus and enable copy, paste, undo, etc. (git.io/jI42)
+      var gui = require('nw.gui');
+      var win = gui.Window.get();
+      var nativeMenuBar = new gui.Menu({ type: "menubar" });
+      nativeMenuBar.createMacBuiltin("SpaceHorse");
+      win.menu = nativeMenuBar;
+
       // Define fake globals referenced by React. Since require is executed in a
       // node frame, it has a different context where only window is available
       global.document = window.document;

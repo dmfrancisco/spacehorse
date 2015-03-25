@@ -6,7 +6,8 @@
 @import "mixins";
 
 /* Styles targeting individual pages and specific user interface elements */
-@import "document";
+@import "document-preview";
+@import "document-editor";
 
 /* Disable overscroll (bouncing scroll effect on OS X) */
 html, body {

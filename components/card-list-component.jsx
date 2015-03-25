@@ -74,7 +74,7 @@ let CardList = React.createClass({
       return (
         <li className="CardList-card" style={styles.listItem} key={index}>
           <Card id={card.id} boardId={this.props.boardId}>
-            {card.content || "Loading..."}
+            {card.content}
           </Card>
         </li>
       );

@@ -6,6 +6,11 @@ import Persistence from './persistence';
 import Dispatcher from './dispatcher';
 import data from '../seeds/data'; // TODO
 
+// Fill the content property with this message until the content is fetched
+data.cards.forEach(function(card) {
+  card.content = "Loading...";
+});
+
 /*
  * Card Store
  */

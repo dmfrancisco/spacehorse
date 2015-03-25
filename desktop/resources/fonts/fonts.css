@@ -239,25 +239,3 @@
          url('source-Code-pro/OTF/SourceCodePro-Semibold.otf') format('opentype'),
          url('source-Code-pro/TTF/SourceCodePro-Semibold.ttf') format('truetype');
 }
-
-@font-face{
-    font-family: 'Source Code Pro';
-    font-weight: 700;
-    font-style: normal;
-    font-stretch: normal;
-    src: url('source-Code-pro/EOT/SourceCodePro-Bold.eot') format('embedded-opentype'),
-         url('source-Code-pro/WOFF/OTF/SourceCodePro-Bold.otf.woff') format('woff'),
-         url('source-Code-pro/OTF/SourceCodePro-Bold.otf') format('opentype'),
-         url('source-Code-pro/TTF/SourceCodePro-Bold.ttf') format('truetype');
-}
-
-@font-face{
-    font-family: 'Source Code Pro';
-    font-weight: 900;
-    font-style: normal;
-    font-stretch: normal;
-    src: url('source-Code-pro/EOT/SourceCodePro-Black.eot') format('embedded-opentype'),
-         url('source-Code-pro/WOFF/OTF/SourceCodePro-Black.otf.woff') format('woff'),
-         url('source-Code-pro/OTF/SourceCodePro-Black.otf') format('opentype'),
-         url('source-Code-pro/TTF/SourceCodePro-Black.ttf') format('truetype');
-}
