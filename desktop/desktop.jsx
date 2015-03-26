@@ -47,7 +47,10 @@ CardStore.sync = function(method, model) {
       ], resolve);
     },
     update(resolve, reject, model) {
-      reject({ msg: "Not implemented" }); // TODO
+      let path = `${ Config.documents.location }/${ model.id }.${ Config.documents.ext }`;
+      let newDocument = { id: model.id, content: model.content };
+      FrontMatter.writeFile(path, newDocument);
+      resolve(model);
     },
     delete(resolve, reject, model) {
       reject({ msg: "Not implemented" }); // TODO

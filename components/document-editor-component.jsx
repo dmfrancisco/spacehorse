@@ -18,7 +18,8 @@ let PureRenderMixin = React.addons.PureRenderMixin;
 let DocumentEditor = React.createClass({
   mixins: [StylingMixin, PureRenderMixin],
   propTypes: {
-    value: React.PropTypes.string.isRequired
+    value: React.PropTypes.string.isRequired,
+    onSave: React.PropTypes.func.isRequired
   },
   getDefaultProps() {
     return {
@@ -50,6 +51,8 @@ let DocumentEditor = React.createClass({
   },
   keyMap() {
     return {
+      "Ctrl-S": this.save,
+      "Cmd-S":  this.save,
       "Ctrl-B": this.bold,
       "Cmd-B":  this.bold,
       "Ctrl-I": this.italic,
@@ -76,6 +79,9 @@ let DocumentEditor = React.createClass({
     } else {
       this.editor.replaceSelection(`_${ s.replace(/_/g, "") }_`);
     }
+  },
+  save() {
+    this.props.onSave(this.editor.getValue());
   }
 });
 

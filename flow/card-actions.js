@@ -17,6 +17,15 @@ let CardActions = {
         content: content
       }
     });
+  },
+  update: function({ id, content }) {
+    Dispatcher.handleViewAction({
+      type: "updateCard",
+      card: {
+        id: id,
+        content: content
+      }
+    });
   }
 };
 

@@ -31,9 +31,22 @@ CardStore.dispatchToken = Dispatcher.register(function(payload) {
       data.cards.push(card);
 
       CardStore.sync("create", card).then(function() {
-        console.log("New card saved successfully");
+        console.log("New card created successfully");
       }).catch(function(e) {
-        console.error(`Oops, there was an error saving card ${card.id}: ${e.msg}`);
+        console.error(`Oops, there was an error creating card ${card.id}: ${e.msg}`);
+      });
+
+      CardStore.emit('change');
+    },
+    updateCard(payload) {
+      let updatedCard = payload.action.card;
+      let card = CardStore.getCard(updatedCard.id);
+      card.content = updatedCard.content;
+
+      CardStore.sync("update", card).then(function() {
+        console.log("Card updated successfully");
+      }).catch(function(e) {
+        console.error(`Oops, there was an error updating card ${card.id}: ${e.msg}`);
       });
 
       CardStore.emit('change');
