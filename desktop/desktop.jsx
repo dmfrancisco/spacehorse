@@ -7,7 +7,7 @@ import React from 'react';
 import FrontMatter from './helpers/front-matter';
 import CardStore from './flow/card-store';
 import Router from './components/router-component.jsx';
-import data from '../seeds/data';
+import data from './seeds/data';
 
 let startUrl = "/boards/3551dbaf6a52a/";
 

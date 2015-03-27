@@ -4,7 +4,7 @@
 var fs = require('fs');
 var manifest = require('./package');
 var watchPath = "../";
-var ignorePattern = /seeds/;
+var ignorePattern = /seeds|\.git/;
 
 // If the app is running in development mode, reload the window on file changes
 if (process.env.NODE_ENV === "development") {

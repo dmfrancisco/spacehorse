@@ -2,9 +2,17 @@
 
 This is a work in progress. It's something I want for myself but also a place to experiment with ES6 features, Isomorphic JavaScript, the [React library](https://facebook.github.io/react/) and [Flux](https://facebook.github.io/flux/), the [SUIT CSS naming conventions](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) and some unconventional practices recently proposed by Facebook (like using [inline CSS styles](https://speakerdeck.com/vjeux/react-css-in-js) again).
 
-You can install the dependencies with `npm install`. For running the server and tests, checkout the *scripts* section in the *package.json* file (for eg: `npm run watch`). I use [jsxhint](https://github.com/STRML/JSXHint/) to analyze the code.
+##### Dependencies
+
+You can install the dependencies with `npm install`. For running the server and tests, checkout the *scripts* section in the *package.json* file (for eg: `npm run live`). I use [jsxhint](https://github.com/STRML/JSXHint/) to analyze the code.
+
+##### Packaging
+
+To build the desktop app, check out the [official nw.js documentation](https://github.com/nwjs/nw.js/wiki/How-to-package-and-distribute-your-apps). For Mac OS X, you can simply copy the entire directory (`rsync desktop/ app.nw -a --copy-links`) or create a compressed archive (`cd desktop && zip -r app.nw *`). Then download the official `nwjs.app` file, click "Show Package Contents" and move the generated archive or directory into `Contents/Resources/`.
 
 ---
+
+##### Initial Idea
 
 There's a new note-taking app each day. Almost as many as weather apps. Each one more minimalistic than the last. On average, a 30-year-old programmer has built at least four during his professional life, [study shows](https://t.co/hiz5ePHMTi). To each his own, I suppose.
 
