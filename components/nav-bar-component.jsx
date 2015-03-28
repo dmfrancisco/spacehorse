@@ -2,11 +2,17 @@
 'use strict';
 
 import React from 'react/addons';
+import Platform from '../helpers/platform';
 import StylingMixin from '../helpers/styling-mixin';
 import BoardChooser from './board-chooser-component.jsx';
 import IconButton from './icon-button-component.jsx';
 
 let PureRenderMixin = React.addons.PureRenderMixin;
+
+if (Platform.nw) {
+  // A native menu instead of the dropdown
+  BoardChooser = require('./board-chooser-nw-component.jsx');
+}
 
 /*
  * NavBar Component
@@ -18,7 +24,7 @@ let NavBar = React.createClass({
   propTypes: {
     appName: React.PropTypes.string.isRequired,
     boards: React.PropTypes.array,
-    currentBoardName: React.PropTypes.string.isRequired,
+    currentBoard: React.PropTypes.object.isRequired,
     height: React.PropTypes.string.isRequired,
   },
   getDefaultProps() {
@@ -50,8 +56,11 @@ let NavBar = React.createClass({
       <div className="NavBar" style={styles.container}>
         <div style={styles.titleArea}>
           <span style={styles.title}>{this.props.appName} </span>
-          <span>Organized by {this.props.currentBoardName} </span>
-          <BoardChooser boards={this.props.boards} />
+          <span>Organized by {this.props.currentBoard.name} </span>
+          <BoardChooser
+            boards={this.props.boards}
+            currentBoardId={this.props.currentBoard.id}
+          />
         </div>
 
         {/* TODO Move this button to a new AppActions component */}

@@ -52,7 +52,7 @@ let BoardWrapper = React.createClass({
     return (
       <div style={styles.container}>
         <NavBar
-          currentBoardName={this.state.currentBoard.name}
+          currentBoard={this.state.currentBoard}
           boards={this.state.boards}
           appName={this.props.appName}
           height={navBarHeight}
