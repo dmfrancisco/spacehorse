@@ -56,8 +56,11 @@ export default React.createClass({
       </div>
     );
   },
-  // If the person clicked on the content, switch to edit mode
-  handleClick() {
+  // If the user clicked on the content, switch to edit mode
+  handleClick(e) {
+    // Return if the user clicked in a link
+    if (e.target.nodeName === "A") return;
+
     this.setState({ previewMode: false });
   },
   // If the user pressed ESC, switch to preview mode

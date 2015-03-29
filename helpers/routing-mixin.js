@@ -16,8 +16,8 @@ let RoutingMixin = {
   // Replaces <a> link behavior with pushState and listens to changes in the url
   registerRoutingListeners() {
     if (typeof window !== 'undefined') {
-      window.addEventListener('click', this._onClick, false);
-      window.addEventListener('popstate', this._onPopState, false);
+      window.addEventListener('click', this._onClick);
+      window.addEventListener('popstate', this._onPopState);
     }
   },
   // Add a new route to this component, if it does not already exists
@@ -56,8 +56,6 @@ let RoutingMixin = {
   // When a link (that points to somewhere inside the app) is clicked, prevents
   // default behavior, updates the url with `pushState` and calls `onRouteChange`
   _onClick(e) {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
-
     // Ensure link
     let el = e.target;
     while (el && 'A' !== el.nodeName) el = el.parentNode;

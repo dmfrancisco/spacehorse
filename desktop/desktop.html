@@ -10,8 +10,9 @@
         cursor: default;
         -webkit-user-select: none;
       }
-      a, button {
-        /* Native apps usually don't use the pointer cursor */
+      button, a:not([href*="//"]):not([href^="mailto:"]) {
+        /* Native apps usually don't use the pointer cursor.
+         * This removes it from buttons and relative links. */
         cursor: default !important;
       }
     </style>
@@ -38,6 +39,9 @@
     </script>
 
     <!-- More scripts we want to execute in the window, not in the node frame -->
+
+    <!-- Open absolute links with the default browser (git.io/jRcg) -->
+    <script src="/open-external.js"></script>
 
     <!-- Preserve window state between sessions (git.io/p2hX) -->
     <script src="/winstate.js"></script>
