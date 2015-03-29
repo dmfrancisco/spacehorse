@@ -24,6 +24,10 @@ let Icon = React.createClass({
         return (
           <g><path d="M7.41 15.41l4.59-4.58 4.59 4.58 1.41-1.41-6-6-6 6z"/></g>
         );
+      case 'content':
+        return (
+          <g><path d="m24 10h-24v4h24v-4m0-8h-24v4h24v-4m-24 20h16v-4h-16v4"/></g>
+        );
       case 'menu':
         return (
           <g><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></g>

@@ -5,6 +5,7 @@ import React from 'react/addons';
 import Markdown from '../helpers/markdown';
 import StylingMixin from '../helpers/styling-mixin';
 import InteractionStylingMixin from '../helpers/interaction-styling-mixin';
+import Icon from './icon-component.jsx';
 
 let PureRenderMixin = React.addons.PureRenderMixin;
 
@@ -20,9 +21,9 @@ let Card = React.createClass({
   render() {
     // To fit 2 tall cards in a col, the card height must always be less than:
     // (100% board height -1 list header -2 card margins -2 card actions)/2 cards
-    let actionsHeight = this.remCalc(30);
+    let footerHeight = this.remCalc(32);
     let magicNumber = this.remCalc(16); // 1/2 card list header + bottom margin
-    let maxHeight = `calc(50% - ${magicNumber} - ${actionsHeight})`;
+    let maxHeight = `calc(50% - ${magicNumber} - ${footerHeight})`;
 
     let styles = {
       container: {
@@ -46,33 +47,36 @@ let Card = React.createClass({
         textDecoration: "none",
         width: "100%"
       },
-      actions: {
-        height: actionsHeight
-        // It makes more sense to use a gradient background on an element
-        // with position absolute. The problem is that adding position relative
-        // to elements inside -webkit-columns is very buggy.
-        // outline: `${this.remCalc(10)} solid rgba(255,255,255,.8)`
+      footer: {
+        alignItems: "center",
+        boxSizing: "border-box",
+        display: "flex",
+        height: footerHeight,
+        padding: this.remCalc(0, 10)
       }
     };
 
     let content = this.props.children;
-    let renderedContent = Markdown.renderExcerpt(content);
+    let { html, more } = Markdown.renderExcerpt(content);
     let href = `/boards/${this.props.boardId}/cards/${this.props.id}`;
 
     return (
       <div
-        {...this.trackInteractionStateActive()}
         style={this.mergeStyles(
           styles.container,
           this.interactionStateIsActive() && styles.active
         )}
         className="Card">
-          <a style={styles.content}
+          <a
+            {...this.trackInteractionStateActive()}
+            style={styles.content}
             className="Card-content DocumentPreview DocumentPreview-excerpt"
             href={href}
-            dangerouslySetInnerHTML={{__html: renderedContent}}
+            dangerouslySetInnerHTML={{__html: html}}
           />
-          <div className="Card-actions" style={styles.actions} />
+          <div className="Card-footer" style={styles.footer}>
+            { more && <Icon icon="content" size={this.remCalc(12)} /> }
+          </div>
       </div>
     );
   }

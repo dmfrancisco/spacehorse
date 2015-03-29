@@ -6,7 +6,7 @@ import MarkdownEmoji from 'markdown-it-emoji';
 import Twemoji from 'twemoji';
 import Highlight from 'highlight.js';
 import Platform from './platform';
-import truncate from 'html-truncate';
+import truncate from 'trim-html';
 
 /*
  * Markdown
@@ -42,10 +42,10 @@ let Markdown = {
     rules.link_close = emptyRule;
 
     // Overwrite the existing function
-    this.renderExcerpt = function(content, options = { length: 600 }) {
+    this.renderExcerpt = function(raw, options = { length: 450 }) {
       // TODO Avoid rendering the entire document
-      var renderedContent = markdown.render(content);
-      return truncate(renderedContent, options.length, { keepImageTag: true });
+      let content = markdown.render(raw);
+      return truncate(content, { limit: options.length });
     };
     // Call the new function
     return this.renderExcerpt(content, options);
