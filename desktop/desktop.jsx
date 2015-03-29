@@ -5,35 +5,26 @@ import async from 'async';
 import fs from 'fs';
 import React from 'react';
 import FrontMatter from './helpers/front-matter';
+import ConfigStore from './flow/config-store';
 import CardStore from './flow/card-store';
 import Router from './components/router-component.jsx';
-import data from './seeds/data';
 
+let data = SpaceHorse.data;
 let startUrl = "/boards/3551dbaf6a52a/";
-
-const Config = {
-  documents: {
-    location: "./seeds",
-    ext: "md",
-    filenamePattern: "./seeds/**/*.md"
-  },
-  data: {
-    location: "./seeds/data.json"
-  }
-};
 
 // Do persistence by reading and saving data to the filesystem
 CardStore.sync = function(method, model) {
   let methods = {
     read(resolve, reject) {
-      FrontMatter.parseAllFiles(Config.documents.filenamePattern, function(err, data) {
+      let pattern = ConfigStore.getDocumentPattern();
+      FrontMatter.parseAllFiles(pattern, function(err, data) {
         resolve(data);
       });
     },
     create(resolve, reject, model) {
       async.parallel([
         function() {
-          let path = `${ Config.documents.location }/${ model.id }.${ Config.documents.ext }`;
+          let path = ConfigStore.getDocumentPath(model.id);
           let newDocument = { id: model.id, content: model.content };
           FrontMatter.writeFile(path, newDocument);
         },
@@ -41,13 +32,15 @@ CardStore.sync = function(method, model) {
           let copy = Object.assign({}, data);
           copy.cards = []; // We'll re-add with only the id and listId properties
           data.cards.forEach(({ id, listId }) => copy.cards.push({ id, listId }));
+
+          let path = ConfigStore.getDataPath();
           let str = JSON.stringify(copy, null, '\t'); // \t for pretty-print
-          fs.writeFile(Config.data.location, str);
+          fs.writeFile(path, str);
         }
       ], resolve);
     },
     update(resolve, reject, model) {
-      let path = `${ Config.documents.location }/${ model.id }.${ Config.documents.ext }`;
+      let path = ConfigStore.getDocumentPath(model.id);
       let newDocument = { id: model.id, content: model.content };
       FrontMatter.writeFile(path, newDocument);
       resolve(model);

@@ -1,7 +1,6 @@
 <html>
   <head>
     <meta charSet="utf-8" />
-    <title>SpaceHorse</title>
     <link rel="stylesheet" href="/resources/fonts/fonts.css" />
     <link rel="stylesheet" href="/resources/assets/app.css" />
     <style>
@@ -19,11 +18,14 @@
   </head>
   <body>
     <script>
-      // Add default menus and enable copy, paste, undo, etc. (git.io/jI42)
       var gui = require('nw.gui');
+      var appName = gui.App.manifest.name;
+      var appSupportPath = gui.App.dataPath + "/contents";
+
+      // Add default menus and enable copy, paste, undo, etc. (git.io/jI42)
       var win = gui.Window.get();
       var nativeMenuBar = new gui.Menu({ type: "menubar" });
-      nativeMenuBar.createMacBuiltin("SpaceHorse");
+      nativeMenuBar.createMacBuiltin(appName);
       win.menu = nativeMenuBar;
 
       // Define fake globals referenced by React. Since require is executed in a
@@ -34,8 +36,42 @@
       // Register babel's hook that makes calls to `require` run ES6 & JSX code
       require('babel/register');
 
-      // Import the main code and implement specific behavior for the desktop app
-      require('./desktop');
+      function initialize(config) {
+        // Override default from web version
+        if (!config.storageLocation || config.storageLocation === "./seeds")
+          config.storageLocation = appSupportPath;
+
+        // Load data from custom location or Application Support
+        var data = require(config.storageLocation + '/data');
+
+        // Store configs and data globally
+        global.SpaceHorse = {
+          config: config,
+          data: data
+        };
+
+        // Import the main code and implement specific behavior for the desktop app
+        require('./desktop');
+      };
+
+      try {
+        // Try loading configs from Application Support
+        var config = require(appSupportPath + '/config');
+        initialize(config);
+      } catch (e) {
+        console.log("Unable to load configs from: " + appSupportPath);
+
+        // Load configs from seeds
+        var config = require('./seeds/config');
+
+        // Copy seed configs and data to Application Support
+        var ncp = require('ncp').ncp;
+        ncp("./seeds", appSupportPath, { dereference: true }, function(err) {
+          if (err) return console.error(err);
+          console.log("Seed data copied to: " + appSupportPath);
+          initialize(config);
+        });
+      }
     </script>
 
     <!-- More scripts we want to execute in the window, not in the node frame -->

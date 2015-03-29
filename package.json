@@ -17,6 +17,7 @@
     "highlight.js": "^8.4.0",
     "markdown-it": "^4.0.1",
     "markdown-it-emoji": "^1.0.0",
+    "ncp": "^2.0.0",
     "path-to-regexp": "^1.0.3",
     "react": "^0.12.2",
     "trim-html": "^0.1.5",

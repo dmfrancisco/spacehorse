@@ -1,3 +1,5 @@
 {
-  "appName": "Spark Board"
+  "appName": "Spark Board",
+  "storageLocation": "./seeds",
+  "documentExtension": "md"
 }

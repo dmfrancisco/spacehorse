@@ -1,11 +1,11 @@
 {
-  "name": "spacehorse-desktop",
+  "name": "SpaceHorse",
   "version": "0.0.0",
   "description": "Organize your knowledge in a visual way",
   "main": "app://spacehorse/desktop.html",
   "private": true,
   "window": {
-    "title": "SpaceHorse",
+    "title": "",
     "show": false,
     "toolbar": false,
     "min_width": 700,

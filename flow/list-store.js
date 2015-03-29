@@ -1,10 +1,12 @@
 /*jshint esnext:true, browserify:true, unused:true */
+/*globals SpaceHorse*/
 'use strict';
 
 import {EventEmitter} from 'events';
 import Persistence from './persistence';
 import Dispatcher from './dispatcher';
-import data from '../seeds/data'; // TODO
+
+let data = SpaceHorse.data;
 
 /*
  * List Store

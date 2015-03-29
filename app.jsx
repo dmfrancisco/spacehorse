@@ -1,4 +1,5 @@
 /*jshint esnext:true, browserify:true, unused:true */
+/*globals SpaceHorse*/
 'use strict';
 
 import React from 'react';
@@ -16,10 +17,11 @@ import Router from './components/router-component.jsx';
  * Also, <Router> should be rendered inside a root <div>. This is important because
  * 3rd-party libs and browser extensions frequently add elements to <body> & <head>.
  */
-export var SpaceHorse = React.createClass({
+export var App = React.createClass({
   render() {
     let fonts = "Source+Sans+Pro:300,400,600,700,400italic,600italic,700italic|" +
       "Source+Code+Pro:400,600|Source+Serif+Pro:700,400";
+    let globals = JSON.stringify(SpaceHorse);
     return (
       <html>
         <head>
@@ -27,6 +29,7 @@ export var SpaceHorse = React.createClass({
           <title>SpaceHorse</title>
           <link rel="stylesheet" href="/assets/app.css"/>
           <link rel="stylesheet" href={`//fonts.googleapis.com/css?family=${fonts}`}/>
+          <script dangerouslySetInnerHTML={{__html: `SpaceHorse = ${globals};` }} />
         </head>
         <body>
           <Router {...this.props}/>
@@ -43,7 +46,7 @@ export var SpaceHorse = React.createClass({
 if (Platform.browser) {
   window.onload = function() {
     let currentPath = window.location.pathname;
-    React.render(<SpaceHorse startUrl={currentPath} />, document);
+    React.render(<App startUrl={currentPath} />, document);
   };
 
   // For now, get all content for all existing cards

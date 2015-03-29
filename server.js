@@ -9,9 +9,15 @@ var React = require('react');
 var express = require('express');
 var server = express();
 
+// Store configs and data globally
+global.SpaceHorse = {
+  config: require('./seeds/config'),
+  data: require('./seeds/data')
+};
+
 // Require and wrap the React main component in a factory before calling it
-// This is necessary because we'll do `SpaceHorse()` instead of <SpaceHorse />
-var SpaceHorse = React.createFactory(require('./app.jsx').SpaceHorse);
+// This is necessary because we'll do `App()` instead of <App />
+var App = React.createFactory(require('./app.jsx').App);
 
 // Serve static files
 server.use('/assets', express.static('assets'));
@@ -29,7 +35,7 @@ server.get('/polyfill.js', function(req, res) {
 // Render the app and send the markup for faster page loads and SEO
 // On the client, React will preserve the markup and only attach event handlers
 server.get('/*', function(req, res) {
-  var component = new SpaceHorse({ startUrl: req.originalUrl });
+  var component = new App({ startUrl: req.originalUrl });
   var markup = React.renderToString(component);
   res.send('<!DOCTYPE html>' + markup);
 });
