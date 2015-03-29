@@ -30,7 +30,7 @@ let Card = React.createClass({
         overflow: "hidden",
         transition: "background 250ms",
         // Avoid buggy line in the bottom of the screen related to -webkit-columns
-        marginTop: this.remCalc(1)
+        marginTop: 1
       },
       active: {
         background: "rgba(0,0,0,.1)",

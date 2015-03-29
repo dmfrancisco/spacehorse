@@ -30,7 +30,8 @@ let CardList = React.createClass({
   componentWillUnmount() {
     CardStore.removeListener("change", this._onStoreChange);
   },
-  handleSubmit(e) {
+  handleKeyDown(e) {
+    if (e.keyCode !== 13 || e.shiftKey) return;
     e.preventDefault();
 
     let input = this.refs.cardContent.getDOMNode();
@@ -57,7 +58,7 @@ let CardList = React.createClass({
       list: {
         listStyle: "none",
         padding: 0,
-        marginTop: 0
+        margin: 0
       },
       listItem: {
         WebkitColumnBreakInside: "avoid",
@@ -67,7 +68,20 @@ let CardList = React.createClass({
         // -webkit-columns removes the margin on top. This little trick allow us
         // to align cards that have a list header above with the ones that don't
         paddingTop: headerHeight,
-        marginTop: `calc(${headerHeight} * -1)`,
+        marginTop: `calc(${headerHeight} * -1)`
+      },
+      textarea: {
+        background: "white",
+        border: "none",
+        fontSize: this.remCalc(14),
+        height: this.remCalc(60),
+        lineHeight: this.remCalc(20),
+        marginTop: 1,
+        outline: "none",
+        overflowY: "hidden",
+        padding: this.remCalc(8, 10),
+        resize: "none",
+        width: "100%"
       }
     };
     let cardNodes = this.state.cards.map((card, index) => {
@@ -87,9 +101,13 @@ let CardList = React.createClass({
         <ol className="CardList-cards" style={styles.list}>
           {cardNodes}
         </ol>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" ref="cardContent" />
-        </form>
+        <div style={styles.listItem}>
+          <textarea
+            ref="cardContent"
+            style={styles.textarea}
+            onKeyDown={this.handleKeyDown}
+          />
+        </div>
       </div>
     );
   },

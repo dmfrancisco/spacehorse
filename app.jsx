@@ -18,10 +18,6 @@ import Router from './components/router-component.jsx';
  */
 export var SpaceHorse = React.createClass({
   render() {
-    let styles = {
-      fontFamily: "Lato, sans-serif",
-      margin: 0
-    };
     let fonts = "Source+Sans+Pro:300,400,600,700,400italic,600italic,700italic|" +
       "Source+Code+Pro:400,600|Source+Serif+Pro:700,400";
     return (
@@ -32,7 +28,7 @@ export var SpaceHorse = React.createClass({
           <link rel="stylesheet" href="/assets/app.css"/>
           <link rel="stylesheet" href={`//fonts.googleapis.com/css?family=${fonts}`}/>
         </head>
-        <body style={styles}>
+        <body>
           <Router {...this.props}/>
           <script src="/polyfill.js"></script>
           <script src="/app.js"></script>

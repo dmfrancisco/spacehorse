@@ -68,6 +68,8 @@ export default React.createClass({
   },
   // Save updates done to the document text
   handleSave(content) {
+    if (content.trim() === "") return;
+
     CardActions.update({
       id: this.state.card.id,
       content: content
