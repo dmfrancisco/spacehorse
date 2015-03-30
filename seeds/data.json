@@ -2,42 +2,26 @@
   "boards": [
     {
       "id": "3551dbaf6a52a",
-      "name": "Example Board"
-    }, {
-      "id": "a25a6fabd1553",
-      "name": "Another Board"
+      "name": "General"
     }
   ],
   "lists": [
     {
       "boardId": "3551dbaf6a52a",
       "id": "3b88d1cb3884",
-      "name": "First list"
-    }, {
-      "boardId": "3551dbaf6a52a",
-      "id": "966d3fb872d1",
-      "name": "Second list"
+      "name": "Inbox"
     }
   ],
   "cards": [
     {
       "listId": "3b88d1cb3884",
-      "id": "4176d2c77535"
-    }, {
-      "listId": "3b88d1cb3884",
       "id": "1af15de5a440"
     }, {
       "listId": "3b88d1cb3884",
-      "id": "4eb49d52d7b4"
+      "id": "4176d2c77535"
     }, {
       "listId": "3b88d1cb3884",
       "id": "7ead6dd5d126"
-    }, {
-      "listId": "966d3fb872d1",
-      "id": "95277025e2cf"
-    }, {
-      "listId": "966d3fb872d1",
-      "id": "d5f5eb2873cd"
     }
   ]
 }

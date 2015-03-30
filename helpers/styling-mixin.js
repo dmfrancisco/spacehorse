@@ -16,13 +16,13 @@ let StylingMixin = {
   mergeStyles(...args) {
     return Object.assign({}, ...args);
   },
-  /*
-   * Convert a list of values in pixels to rems. For example:
-   *    remCalc(16, 18, 32) # returns "1rem 1.125rem 2rem"
-   * @param {Integer} remBase — The base body font size value in pixels
-   * @param {Array} values — One or more values in pixels to be converted to rem
-   * @return {String} Space delimited values that can be used in css styles
-   */
+  //
+  // Convert a list of values in pixels to rems. For example:
+  //    remCalc(16, 18, 32) # returns "1rem 1.125rem 2rem"
+  // @param {Integer} remBase — The base body font size value in pixels
+  // @param {Array} values — One or more values in pixels to be converted to rem
+  // @return {String} Space delimited values that can be used in css styles
+  //
   remCalc(...values) {
     let remBase = 16; // The base body font size value in pixels
     return values.map((value) => `${value/remBase}rem`).join(" ");

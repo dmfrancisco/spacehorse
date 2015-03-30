@@ -42,6 +42,7 @@ let Card = React.createClass({
         color: "inherit",
         display: "block",
         maxHeight: maxHeight,
+        minHeight: this.remCalc(40),
         overflow: "hidden",
         padding: this.remCalc(8, 10, 0),
         textDecoration: "none",

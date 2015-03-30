@@ -12,6 +12,10 @@ $font-weight-bold: 700;
   & > *:last-child {
     margin-bottom: 0 !important;
   }
+  p:empty {
+    // Hide empty paragraphs to prevent unnecessary margins
+    display: none;
+  }
 }
 
 /*
@@ -170,12 +174,8 @@ $font-weight-bold: 700;
     -webkit-line-clamp: 2;
 
     // The combination of these two keeps vertical rhythm for both 1 and 2 lines
-    margin-bottom: rem-calc(18);
-    margin-top: rem-calc(2);
-  }
-  & > h1:first-child,
-  & > h2:first-child {
-    margin-top: rem-calc(2) !important;
+    margin-bottom: $base-height;
+    margin-top: 0;
   }
   h1 {
     font-weight: $font-weight-bold;
@@ -205,6 +205,13 @@ $font-weight-bold: 700;
     margin-top: 0;
     margin-bottom: $base-height;
   }
+  blockquote {
+    margin: $base-height;
+    margin-right: 0;
+  }
+  pre {
+    margin: $base-height 0;
+  }
   hr {
     border: none;
     border-bottom: 1px solid;
@@ -214,5 +221,24 @@ $font-weight-bold: 700;
   p + hr {
     // Try to keep the vertical rhythm
     margin-top: -1 * ($base-height/2 + rem-calc(1));
+  }
+  & > p:only-child {
+    // If there is only one paragraph, make the text slightly bigger
+    font-size: rem-calc(16);
+  }
+
+  /* Remove common styles (for a less distracting look) */
+
+  strong {
+    font-weight: normal;
+  }
+  em {
+    font-style: normal;
+  }
+  s {
+    text-decoration: none;
+  }
+  pre, code {
+    font-family: inherit;
   }
 }

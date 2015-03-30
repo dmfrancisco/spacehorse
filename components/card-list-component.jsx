@@ -74,7 +74,7 @@ let CardList = React.createClass({
         background: "white",
         border: "none",
         fontSize: this.remCalc(14),
-        height: this.remCalc(60),
+        height: this.remCalc(74),
         lineHeight: this.remCalc(20),
         marginTop: 1,
         outline: "none",

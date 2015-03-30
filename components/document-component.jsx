@@ -44,11 +44,14 @@ export default React.createClass({
     let content = this.state.card.content;
 
     let styles = {
+      alignItems: "center",
       boxSizing: "border-box",
+      display: "flex",
+      justifyContent: "center",
       margin: "0 auto",
       maxWidth: this.remCalc(700),
       minHeight: "100vh",
-      padding: this.remCalc(80)
+      padding: this.remCalc(80, 80, 120)
     };
     return (
       <div style={styles} onClick={this.handleClick}>

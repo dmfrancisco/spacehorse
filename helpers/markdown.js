@@ -34,8 +34,9 @@ let Markdown = {
       return "";
     };
 
-    // Don't render images
+    // Don't render images and emoji
     rules.image = emptyRule;
+    rules.emoji = emptyRule;
 
     // Display links as text
     rules.link_open = emptyRule;
